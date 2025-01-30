@@ -87,6 +87,13 @@ jobs:
         sudo sed -i 's|-O2|-O3|; s|MAKEFLAGS=.*|MAKEFLAGS="-j$(nproc)"|; s|#MAKEFLAGS|MAKEFLAGS|' /etc/makepkg.conf
         cat /etc/makepkg.conf
 
+    - name: Install debloated llvm-libs
+      run: |
+        LLVM="$(wget https://api.github.com/repos/Samueru-sama/llvm-libs-debloated/releases -O - \
+          | sed 's/[()",{} ]/\n/g' | grep -oi "https.*very-minimal.pkg.tar.zst$" | head -1)"
+        wget "$LLVM" -O ./llvm-libs.pkg.tar.zst
+        pacman -U --noconfirm ./llvm-libs.pkg.tar.zst
+
     - name: Compile Citron
       run: |
         chmod +x ./*-appimage.sh && ./*-appimage.sh
