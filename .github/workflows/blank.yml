@@ -42,7 +42,6 @@ jobs:
           nasm \
           qt6-tools \
           qt6-base \
-          qt6-webengine \
           qt6-multimedia \
           qt6-wayland \
           mbedtls2 \
