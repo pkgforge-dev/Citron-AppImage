@@ -31,6 +31,7 @@ fi
 
 # This library is massive and makes the AppImage +220 Mib
 # Seems to have very few  uses so we will build without it
+sed -i "s/'qt6-webengine'//" ./PKGBUILD
 sed -i 's/-DCITRON_USE_QT_WEB_ENGINE=ON/-DCITRON_USE_QT_WEB_ENGINE=OFF/' ./PKGBUILD
 
 if ! grep -q -- '-O3' ./PKGBUILD; then
