@@ -1,4 +1,4 @@
-name: Appimage
+name: Build & Release Citron AppImage
 concurrency:
   group: build-${{ github.ref }}
   cancel-in-progress: true
@@ -6,188 +6,173 @@ concurrency:
 on:
   schedule:
     - cron: "0 14 * * 0"
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    name: "${{ matrix.name }}"
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      matrix:
+        include:
+          - runs-on: ubuntu-latest
+            script: "./*-appimage.sh"
+            optimised: false
+            name: "Citron build (Normal)"
+          - runs-on: ubuntu-latest
+            script: "./*-appimage.sh v3"
+            optimised: true
+            name: "Citron Build (Optimised)"
     container: artixlinux/artixlinux:latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-    - name: Install dependencies
-      if: always()
-      run: |
-        sed -i 's/DownloadUser/#DownloadUser/g' /etc/pacman.conf
-        pacman -Syu --noconfirm base-devel strace patchelf curl wget \
-          desktop-file-utils git artix-archlinux-support llvm mesa xorg-server-xvfb \
-          vulkan-radeon vulkan-intel vulkan-nouveau pulseaudio pulseaudio-alsa pipewire
-        pacman-key --init && pacman-key --populate archlinux
-        printf "\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n" | tee -a /etc/pacman.conf
-        sudo pacman -Syu --noconfirm \
-          zsync \
-          catch2 \
-          enet \
-          gamemode \
-          cmake \
-          gcc13 \
-          glslang \
-          glu \
-          hidapi \
-          xcb-util-wm \
-          xcb-util-image \
-          xcb-util-renderutil \
-          libxkbcommon-x11 \
-          libxi \
-          nasm \
-          qt6-tools \
-          qt6-base \
-          qt6-multimedia \
-          qt6-wayland \
-          mbedtls2 \
-          fmt \
-          nlohmann-json \
-          aom \
-          libass \
-          haskell-gnutls \
-          sdl2 \
-          libva \
-          meson \
-          ninja \
-          x264 \
-          x265 \
-          numactl \
-          libvpx \
-          libfdk-aac \
-          libopusenc \
-          ffmpeg \
-          svt-av1 \
-          dav1d \
-          boost \
-          clang \
-          vulkan-headers \
-          ffmpeg4.4 \
-          zip \
-          unzip \
-          boost-libs \
-          doxygen \
-          python-pip \
-          libzip \
-          mbedtls \
-          libzip \
-          qt6ct
+      - name: Install dependencies
+        if: always()
+        run: |
+          sed -i 's/DownloadUser/#DownloadUser/g' /etc/pacman.conf
+          pacman -Syu --noconfirm base-devel strace patchelf curl wget \
+            desktop-file-utils git artix-archlinux-support llvm mesa xorg-server-xvfb \
+            vulkan-radeon vulkan-intel vulkan-nouveau pulseaudio pulseaudio-alsa pipewire
+          pacman-key --init && pacman-key --populate archlinux
+          printf "\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n" | tee -a /etc/pacman.conf
+          sudo pacman -Syu --noconfirm \
+            zsync \
+            catch2 \
+            enet \
+            gamemode \
+            cmake \
+            gcc13 \
+            glslang \
+            glu \
+            hidapi \
+            xcb-util-wm \
+            xcb-util-image \
+            xcb-util-renderutil \
+            libxkbcommon-x11 \
+            libxi \
+            nasm \
+            qt6-tools \
+            qt6-base \
+            qt6-multimedia \
+            qt6-wayland \
+            mbedtls2 \
+            fmt \
+            nlohmann-json \
+            aom \
+            libass \
+            haskell-gnutls \
+            sdl2 \
+            libva \
+            meson \
+            ninja \
+            x264 \
+            x265 \
+            numactl \
+            libvpx \
+            libfdk-aac \
+            libopusenc \
+            ffmpeg \
+            svt-av1 \
+            dav1d \
+            boost \
+            clang \
+            vulkan-headers \
+            ffmpeg4.4 \
+            zip \
+            unzip \
+            boost-libs \
+            doxygen \
+            python-pip \
+            libzip \
+            mbedtls \
+            libzip \
+            qt6ct
 
-        echo "Hacking makepkg to allow building as root in the container..."
-        sudo sed -i 's|EUID == 0|EUID == 69|g' /usr/bin/makepkg
-        mkdir -p /usr/local/bin
-        cp /usr/bin/makepkg /usr/local/bin
-        
-        echo "its -O3 the letter, not -03 the number"
-        sudo sed -i 's|-O2|-O3|; s|MAKEFLAGS=.*|MAKEFLAGS="-j$(nproc)"|; s|#MAKEFLAGS|MAKEFLAGS|' /etc/makepkg.conf
-        cat /etc/makepkg.conf
+          echo "Hacking makepkg to allow building as root in the container..."
+          sudo sed -i 's|EUID == 0|EUID == 69|g' /usr/bin/makepkg
+          mkdir -p /usr/local/bin
+          cp /usr/bin/makepkg /usr/local/bin
 
-    - name: Install debloated llvm-libs
-      run: |
-        LLVM_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/llvm-libs-nano-x86_64.pkg.tar.zst"
-        wget "$LLVM_URL" -O ./llvm-libs.pkg.tar.zst
-        pacman -U --noconfirm ./llvm-libs.pkg.tar.zst
-        rm -f ./llvm-libs.pkg.tar.zst
+          echo "its -O3 the letter, not -03 the number"
+          sudo sed -i 's|-O2|-O3|; s|MAKEFLAGS=.*|MAKEFLAGS="-j$(nproc)"|; s|#MAKEFLAGS|MAKEFLAGS|' /etc/makepkg.conf
+          cat /etc/makepkg.conf
 
-    - name: Install iculess libxml2 and qt6-core
-      run: |
-        QT6_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/qt6-base-iculess-x86_64.pkg.tar.zst"
-        LIBXML_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/libxml2-iculess-x86_64.pkg.tar.zst"
-        wget "$QT6_URL" -O ./qt6-base-iculess.pkg.tar.zst
-        wget "$LIBXML_URL" -O ./libxml2-iculess.pkg.tar.zst
-        pacman -U --noconfirm ./qt6-base-iculess.pkg.tar.zst ./libxml2-iculess.pkg.tar.zst
-        rm -f ./qt6-base-iculess.pkg.tar.zst ./libxml2-iculess.pkg.tar.zst
+      - name: Install debloated llvm-libs
+        run: |
+          LLVM_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/llvm-libs-nano-x86_64.pkg.tar.zst"
+          wget "$LLVM_URL" -O ./llvm-libs.pkg.tar.zst
+          pacman -U --noconfirm ./llvm-libs.pkg.tar.zst
+          rm -f ./llvm-libs.pkg.tar.zst
 
-    - name: Compile Citron
-      run: |
-        chmod +x ./*-appimage.sh && ./*-appimage.sh
-        mkdir -p dist
-        mv *.AppImage* dist/
+      - name: Install iculess libxml2 and qt6-core
+        run: |
+          QT6_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/qt6-base-iculess-x86_64.pkg.tar.zst"
+          LIBXML_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/libxml2-iculess-x86_64.pkg.tar.zst"
+          wget "$QT6_URL" -O ./qt6-base-iculess.pkg.tar.zst
+          wget "$LIBXML_URL" -O ./libxml2-iculess.pkg.tar.zst
+          pacman -U --noconfirm ./qt6-base-iculess.pkg.tar.zst ./libxml2-iculess.pkg.tar.zst
+          rm -f ./qt6-base-iculess.pkg.tar.zst ./libxml2-iculess.pkg.tar.zst
 
-    - name: Compile Citron Optimized
-      run: |
-        rm -rf ./AppDir || true
-        sudo pacman -R --noconfirm citron || true
-        chmod +x ./*-appimage.sh && ./*-appimage.sh v3
-        mkdir -p dist
-        mv *.AppImage* dist/
+      - name: Compile Citron (Normal)
+        if: ${{ matrix.optimised == false }}
+        run: |
+          chmod +x ./*-appimage.sh && ./*-appimage.sh
+          mkdir -p dist
+          mv *.AppImage* dist/
 
-    - name: Check version file
-      run: |
-       cat ~/version
-       echo "APP_VERSION=$(cat ~/version)" >> "${GITHUB_ENV}"
-    
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4.6.0
-      with:
-        name: AppImage
-        path: 'dist'
-        
-    - name: Upload version file
-      uses: actions/upload-artifact@v4.6.0
-      with:
-       name: version
-       path: ~/version
-    
+      - name: Compile Citron (Optimised)
+        if: ${{ matrix.optimised == true }}
+        run: |
+          rm -rf ./AppDir || true
+          sudo pacman -R --noconfirm citron || true
+          chmod +x ./*-appimage.sh && ./*-appimage.sh v3
+          mkdir -p dist
+          mv *.AppImage* dist/
+
+      - name: Check version file
+        run: |
+          cat ~/version
+          echo "APP_VERSION=$(cat ~/version)" >> "${GITHUB_ENV}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: AppImage
+          path: "dist"
+
+      - name: Upload version file
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: citron-appimage-${{ matrix.optimised && 'optimised' || 'normal' }}
+          path: ~/version
+
   release:
-      needs: [build]
-      permissions: write-all
-      runs-on: ubuntu-latest
+    name: "release"
+    needs: [build]
+    permissions:
+      actions: read
+      security-events: write
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: citron-appimage-optimised
 
-      steps:
-        - uses: actions/download-artifact@v4.1.8
-          with:
-            name: AppImage
-        - uses: actions/download-artifact@v4.1.8
-          with:
-            name: version
+      - uses: actions/download-artifact@v4
+        with:
+          name: citron-appimage-normal
 
-        - name: Read version
-          run: |
-            cat version
-            export VERSION="$(<version)"
-            echo "APP_VERSION=${VERSION}" >> "${GITHUB_ENV}"
-    
-        #Version Release
-        - name: Del Previous Release
-          run: |
-            gh release delete "${APP_VERSION}" --repo "${GITHUB_REPOSITORY}" --cleanup-tag  -y
-            sleep 5
-          env:
-            GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          continue-on-error: true
-        - name: Continuous Releaser
-          uses: softprops/action-gh-release@v2
-          with:
-            name: "Citron AppImage ${{ env.APP_VERSION }}"
-            tag_name: "${{ env.APP_VERSION }}"
-            prerelease: false
-            draft: false
-            generate_release_notes: false
-            make_latest: true
-            files: |
-              *.AppImage*
-          continue-on-error: false
-
-        #Snapshot Release
-        - name: Get Date
-          run: |
-            SNAPSHOT_TAG="$(date --utc +'%Y%m%d-%H%M%S')"
-            echo SNAPSHOT_TAG="${SNAPSHOT_TAG}" >> "${GITHUB_ENV}"
-          continue-on-error: false
-        - name: Snapshot Releaser
-          uses: softprops/action-gh-release@v2
-          with:
-            name: "Snapshot ${{ env.APP_VERSION }}"
-            tag_name: "${{ env.SNAPSHOT_TAG }}"
-            prerelease: false
-            draft: false
-            generate_release_notes: false
-            make_latest: false
-            files: |
-              *.AppImage*
-          continue-on-error: false
+      - name: release
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          title: Continuous build
+          automatic_release_tag: continuous
+          prerelease: false
+          draft: false
+          files: |
+            *.AppImage*
+          repo_token: ${{ secrets.GITHUB_TOKEN }}

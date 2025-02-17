@@ -6,8 +6,8 @@ export APPIMAGE_EXTRACT_AND_RUN=1
 export ARCH="$(uname -m)"
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
 URUNTIME=$(wget --retry-connrefused --tries=30 \
-	https://api.github.com/repos/VHSgunzo/uruntime/releases -O - \
-	| sed 's/[()",{} ]/\n/g' | grep -oi "https.*appimage.*dwarfs.*$ARCH$" | head -1)
+	https://api.github.com/repos/VHSgunzo/uruntime/releases -O - |
+	sed 's/[()",{} ]/\n/g' | grep -oi "https.*appimage.*dwarfs.*$ARCH$" | head -1)
 ICON="https://git.citron-emu.org/Citron/Citron/raw/branch/master/dist/citron.svg"
 
 if [ "$1" = 'v3' ]; then
@@ -44,7 +44,7 @@ makepkg -f
 sudo pacman --noconfirm -U *.pkg.tar.*
 ls .
 export VERSION="$(awk -F'=' '/pkgver=/{print $2; exit}' ./PKGBUILD)"
-echo "$VERSION" > ~/version
+echo "$VERSION" >~/version
 cd ..
 
 # NOW MAKE APPIMAGE
@@ -63,7 +63,7 @@ Exec=citron %f
 Categories=Game;Emulator;Qt;
 MimeType=application/x-nx-nro;application/x-nx-nso;application/x-nx-nsp;application/x-nx-xci;
 Keywords=Nintendo;Switch;
-StartupWMClass=citron' > ./citron.desktop
+StartupWMClass=citron' >./citron.desktop
 
 if ! wget --retry-connrefused --tries=30 "$ICON" -O citron.svg; then
 	echo "kek"
@@ -105,7 +105,7 @@ chmod +x ./uruntime
 
 #Add udpate info to runtime
 echo "Adding update information \"$UPINFO\" to runtime..."
-printf "$UPINFO" > data.upd_info
+printf "$UPINFO" >data.upd_info
 llvm-objcopy --update-section=.upd_info=data.upd_info \
 	--set-section-flags=.upd_info=noload,readonly ./uruntime
 printf 'AI\x02' | dd of=./uruntime bs=1 count=3 seek=8 conv=notrunc
@@ -121,4 +121,3 @@ echo "Generating AppImage..."
 echo "Generating zsync file..."
 zsyncmake *.AppImage -u *.AppImage
 echo "All Done!"
-
