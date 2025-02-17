@@ -17,12 +17,12 @@ jobs:
         include:
           - runs-on: ubuntu-latest
             script: "./*-appimage.sh"
-            optimised: false
+            optimized: false
             name: "Citron build (Normal)"
           - runs-on: ubuntu-latest
             script: "./*-appimage.sh v3"
-            optimised: true
-            name: "Citron Build (Optimised)"
+            optimized: true
+            name: "Citron Build (Optimized)"
     container: artixlinux/artixlinux:latest
     steps:
       - uses: actions/checkout@v4
@@ -117,14 +117,14 @@ jobs:
           rm -f ./qt6-base-iculess.pkg.tar.zst ./libxml2-iculess.pkg.tar.zst
 
       - name: Compile Citron (Normal)
-        if: ${{ matrix.optimised == false }}
+        if: ${{ matrix.optimized == false }}
         run: |
           chmod +x ./*-appimage.sh && ./*-appimage.sh
           mkdir -p dist
           mv *.AppImage* dist/
 
-      - name: Compile Citron (Optimised)
-        if: ${{ matrix.optimised == true }}
+      - name: Compile Citron (Optimized)
+        if: ${{ matrix.optimized == true }}
         run: |
           rm -rf ./AppDir || true
           sudo pacman -R --noconfirm citron || true
@@ -135,17 +135,17 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: citron-${{ matrix.optimised && 'optimised' || 'normal' }}-appimage
+          name: citron-${{ matrix.optimized && 'optimized' || 'normal' }}-appimage
           path: "dist"
 
       - name: Check version file
-        if: ${{ matrix.optimised == false }}
+        if: ${{ matrix.optimized == false }}
         run: |
           cat ~/version
           echo "APP_VERSION=$(cat ~/version)" >> "${GITHUB_ENV}"
 
       - name: Upload version file
-        if: ${{ matrix.optimised == false }}
+        if: ${{ matrix.optimized == false }}
         uses: actions/upload-artifact@v4
         with:
           name: version
@@ -162,7 +162,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: citron-optimised-appimage
+          name: citron-optimized-appimage
 
       - uses: actions/download-artifact@v4
         with:
