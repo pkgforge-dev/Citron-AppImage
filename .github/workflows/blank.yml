@@ -132,21 +132,23 @@ jobs:
           mkdir -p dist
           mv *.AppImage* dist/
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: citron-${{ matrix.optimised && 'optimised' || 'normal' }}-appimage
+          path: "dist"
+
       - name: Check version file
+        if: ${{ matrix.optimised == false }}
         run: |
           cat ~/version
           echo "APP_VERSION=$(cat ~/version)" >> "${GITHUB_ENV}"
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4.6.0
-        with:
-          name: AppImage
-          path: "dist"
-
       - name: Upload version file
-        uses: actions/upload-artifact@v4.6.0
+        if: ${{ matrix.optimised == false }}
+        uses: actions/upload-artifact@v4
         with:
-          name: citron-appimage-${{ matrix.optimised && 'optimised' || 'normal' }}
+          name: version
           path: ~/version
 
   release:
@@ -160,17 +162,29 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: citron-appimage-optimised
+          name: citron-optimised-appimage
 
       - uses: actions/download-artifact@v4
         with:
-          name: citron-appimage-normal
+          name: citron-normal-appimage
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: version
+
+      - name: Read version
+        run: |
+          cat version
+          export VERSION="$(<version)"
+          SNAPSHOT_TAG="$(date --utc +'%Y%m%d-%H%M%S')"
+          echo "APP_VERSION=${VERSION}" >> "${GITHUB_ENV}"
+          echo SNAPSHOT_TAG="${SNAPSHOT_TAG}" >> "${GITHUB_ENV}"
 
       - name: release
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
-          title: Continuous build
-          automatic_release_tag: continuous
+          title: "Snapshot ${{ env.APP_VERSION }}"
+          automatic_release_tag: "${{ env.SNAPSHOT_TAG }}"
           prerelease: false
           draft: false
           files: |
