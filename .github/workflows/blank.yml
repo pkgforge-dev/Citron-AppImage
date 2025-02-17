@@ -180,13 +180,33 @@ jobs:
           echo "APP_VERSION=${VERSION}" >> "${GITHUB_ENV}"
           echo SNAPSHOT_TAG="${SNAPSHOT_TAG}" >> "${GITHUB_ENV}"
 
-      - name: release
-        uses: marvinpinto/action-automatic-releases@v1.2.1
+      - name: Del Previous Release
+        run: |
+          gh release delete "${APP_VERSION}" --repo "${GITHUB_REPOSITORY}" --cleanup-tag  -y
+          sleep 5
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        continue-on-error: true
+      - name: Continuous Releaser
+        uses: softprops/action-gh-release@v2
         with:
-          title: "Snapshot ${{ env.APP_VERSION }}"
-          automatic_release_tag: "${{ env.SNAPSHOT_TAG }}"
+          name: "Citron AppImage ${{ env.APP_VERSION }}"
+          tag_name: "${{ env.APP_VERSION }}"
           prerelease: false
           draft: false
+          generate_release_notes: false
+          make_latest: true
           files: |
             *.AppImage*
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Snapshot Releaser
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Snapshot ${{ env.APP_VERSION }}"
+          tag_name: "${{ env.SNAPSHOT_TAG }}"
+          prerelease: false
+          draft: false
+          generate_release_notes: false
+          make_latest: false
+          files: |
+            *.AppImage*
