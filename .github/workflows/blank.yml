@@ -116,6 +116,13 @@ jobs:
           pacman -U --noconfirm ./qt6-base-iculess.pkg.tar.zst ./libxml2-iculess.pkg.tar.zst
           rm -f ./qt6-base-iculess.pkg.tar.zst ./libxml2-iculess.pkg.tar.zst
 
+      - name: Install ffmpeg mini
+        run: |
+          FFMPEG_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/ffmpeg-mini-x86_64.pkg.tar.zst"
+          wget "$FFMPEG_URL" -O ./ffmpeg-mini-x86_64.pkg.tar.zst
+          pacman -U --noconfirm ./ffmpeg-mini-x86_64.pkg.tar.zst
+          rm -f ./ffmpeg-mini-x86_64.pkg.tar.zst
+
       - name: Compile Citron (Normal)
         if: ${{ matrix.optimized == false }}
         run: |
