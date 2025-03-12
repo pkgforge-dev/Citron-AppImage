@@ -15,7 +15,7 @@ ICON="https://git.citron-emu.org/Citron/Citron/raw/branch/master/dist/citron.svg
 if [ "$1" = 'v3' ]; then
 	echo "Making x86-64-v3 build of citron"
 	ARCH="${ARCH}_v3"
-	ARCH_FLAGS="-march=x86-64-v3 -mtune=x86-64-v3"
+	ARCH_FLAGS="-march=x86-64-v3 -mtune=generic"
 else
 	echo "Making x86-64-v3 generic of citron"
 	ARCH_FLAGS="-march=x86-64 -mtune=generic"
