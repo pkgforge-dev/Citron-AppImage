@@ -65,7 +65,7 @@ git clone https://git.citron-emu.org/Citron/Citron.git ./citron
 		-DCMAKE_C_FLAGS="$ARCH_FLAGS -mtune=native" \
 		-DCITRON_ENABLE_PGO_OPTIMIZE=ON \
 		-DCMAKE_SYSTEM_PROCESSOR="$(uname -m)" \
-		-DCMAKE_BUILD_TYPE=Release
+		-DCMAKE_BUILD_TYPE=MinSizeRel
 	ninja
 	sudo ninja install
 )
