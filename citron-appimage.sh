@@ -1,53 +1,71 @@
 #!/bin/sh
 
-set -e
+set -ex
 
 export APPIMAGE_EXTRACT_AND_RUN=1
 export ARCH="$(uname -m)"
+
+REPO="https://git.citron-emu.org/Citron/Citron.git"
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
 URUNTIME=$(wget --retry-connrefused --tries=30 \
 	https://api.github.com/repos/VHSgunzo/uruntime/releases -O - \
 	| sed 's/[()",{} ]/\n/g' | grep -oi "https.*appimage.*dwarfs.*$ARCH$" | head -1)
 ICON="https://git.citron-emu.org/Citron/Citron/raw/branch/master/dist/citron.svg"
 
+LATEST_TAG=$(wget 'https://git.citron-emu.org/Citron/Citron/tags' -O - \
+	| grep -oP '(?<=/Citron/Citron/releases/tag/)[^"]+' | head -1 | tr -d '"'\''[:space:]')
+
 if [ "$1" = 'v3' ]; then
 	echo "Making x86-64-v3 build of citron"
 	ARCH="${ARCH}_v3"
+	ARCH_FLAGS="-march=x86-64-v3 -mtune=x86-64-v3"
+else
+	echo "Making x86-64-v3 generic of citron"
+	ARCH_FLAGS="-march=generic -mtune=generic"
 fi
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARCH.AppImage.zsync"
 
 # BUILD CITRON
-if [ ! -d ./citron ]; then
-	git clone https://aur.archlinux.org/citron.git citron
-fi
-cd ./citron
-
-if [ "$1" = 'v3' ]; then
-	sed -i 's/-march=[^"]*/-march=x86-64-v3/g' ./PKGBUILD
-	sudo sed -i 's/-march=x86-64 /-march=x86-64-v3 /' /etc/makepkg.conf # Do I need to do this as well?
-	cat /etc/makepkg.conf
+if [ "$DEVEL" = 'true' ]; then
+	git clone https://git.citron-emu.org/Citron/Citron.git ./citron
 else
-	sed -i 's/-march=[^"]*/-march=x86-64/g' ./PKGBUILD
+	wget --retry-connrefused --tries=30 "https://git.citron-emu.org/Citron/Citron/archive/$LATEST_TAG.tar.gz"
+	tar xfv *.tar.gz
+	rm -f *.tar.gz
 fi
 
-# This library is massive and makes the AppImage +220 Mib
-# Seems to have very few  uses so we will build without it
-sed -i "s/'qt6-webengine'//" ./PKGBUILD
-sed -i 's/-DCITRON_USE_QT_WEB_ENGINE=ON/-DCITRON_USE_QT_WEB_ENGINE=OFF/' ./PKGBUILD
+( cd ./citron
+	mkdir build
+	cd build
+	cmake .. -GNinja \
+		-DCITRON_ENABLE_LTO=ON \
+		-DCITRON_USE_BUNDLED_VCPKG=OFF \
+		-DCITRON_USE_BUNDLED_QT=OFF \
+		-DCITRON_USE_QT_WEB_ENGINE=OFF \
+		-DENABLE_QT_TRANSLATION=ON \
+		-DUSE_SYSTEM_QT=ON \
+		-DCITRON_TESTS=OFF \
+		-DCITRON_USE_LLVM_DEMANGLE=OFF \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error" \
+		-DCMAKE_C_FLAGS="$ARCH_FLAGS" \
+		-DUSE_DISCORD_PRESENCE=OFF \
+		-DCITRON_ENABLE_PGO_OPTIMIZE=ON \
+		-DBUNDLE_SPEEX=ON \
+		-DCMAKE_SYSTEM_PROCESSOR="$(uname -m)" \
+		-DCMAKE_BUILD_TYPE=MinSizeRel \
+		-DCITRON_USE_BUNDLED_SDL2=ON \
+		-DCITRON_USE_EXTERNAL_SDL2=OFF
+	ninja
+	sudo ninja install
+)
+rm -rf ./citron
 
-if ! grep -q -- '-O3' ./PKGBUILD; then
-	sed -i 's/-march=/-O3 -march=/g' ./PKGBUILD
-fi
-cat ./PKGBUILD
-
-makepkg -f
-sudo pacman --noconfirm -U *.pkg.tar.*
-ls .
-export VERSION="$(awk -F'=' '/pkgver=/{print $2; exit}' ./PKGBUILD)"
+VERSION=$(echo "$LATEST_TAG" | awk -F'-' '{print $1}')
 echo "$VERSION" > ~/version
-cd ..
 
 # NOW MAKE APPIMAGE
+cd ..
 mkdir ./AppDir
 cd ./AppDir
 
