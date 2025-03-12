@@ -69,7 +69,6 @@ VERSION=$(echo "$LATEST_TAG" | awk -F'-' '{print $1}')
 echo "$VERSION" > ~/version
 
 # NOW MAKE APPIMAGE
-cd ..
 mkdir ./AppDir
 cd ./AppDir
 
