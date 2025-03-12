@@ -29,10 +29,10 @@ git clone https://git.citron-emu.org/Citron/Citron.git ./citron
 	if [ "$DEVEL" = 'true' ]; then
 		echo "Making nightly build"
 	else
-		LATEST_TAG=$(wget 'https://api.rv.pkgforge.dev/https://git.citron-emu.org/Citron/Citron/tags' -O - \
+		CITRON_TAG=$(wget 'https://api.rv.pkgforge.dev/https://git.citron-emu.org/Citron/Citron/tags' -O - \
 			| grep -oP '(?<=/Citron/Citron/releases/tag/)[^"]+' | head -1 | tr -d '"'\''[:space:]')
-		echo "Making stable \"$LATEST_TAG\" build"
-		git checkout "$LATEST_TAG"
+		echo "Making stable \"$CITRON_TAG\" build"
+		git checkout "$CITRON_TAG"
 	fi
 	git submodule update --init --recursive
 
@@ -65,7 +65,7 @@ git clone https://git.citron-emu.org/Citron/Citron.git ./citron
 )
 rm -rf ./citron
 
-VERSION=$(echo "$LATEST_TAG" | awk -F'-' '{print $1}')
+VERSION=$(echo "$CITRON_TAG" | awk -F'-' '{print $1}')
 echo "$VERSION" > ~/version
 
 # NOW MAKE APPIMAGE
