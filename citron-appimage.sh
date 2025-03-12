@@ -24,16 +24,16 @@ UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARC
 
 # BUILD CITRON
 git clone https://git.citron-emu.org/Citron/Citron.git ./citron
-if [ "$DEVEL" = 'true' ]; then
-	echo "Making nightly build"
-else
-	LATEST_TAG=$(wget 'https://api.rv.pkgforge.dev/https://git.citron-emu.org/Citron/Citron/tags' -O - \
-		| grep -oP '(?<=/Citron/Citron/releases/tag/)[^"]+' | head -1 | tr -d '"'\''[:space:]')
-	echo "Making stable \"$LATEST_TAG\" build"
-	git checkout "$LATEST_TAG"
-fi
 
 ( cd ./citron
+	if [ "$DEVEL" = 'true' ]; then
+		echo "Making nightly build"
+	else
+		LATEST_TAG=$(wget 'https://api.rv.pkgforge.dev/https://git.citron-emu.org/Citron/Citron/tags' -O - \
+			| grep -oP '(?<=/Citron/Citron/releases/tag/)[^"]+' | head -1 | tr -d '"'\''[:space:]')
+		echo "Making stable \"$LATEST_TAG\" build"
+		git checkout "$LATEST_TAG"
+	fi
 	git submodule update --init --recursive
 	mkdir build
 	cd build
