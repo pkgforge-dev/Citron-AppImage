@@ -15,7 +15,7 @@ ICON="https://git.citron-emu.org/Citron/Citron/raw/branch/master/dist/citron.svg
 if [ "$1" = 'v3' ]; then
 	echo "Making x86-64-v3 build of citron"
 	ARCH="${ARCH}_v3"
-	ARCH_FLAGS="-march=x86-64-v3 -mtune=generic"
+	ARCH_FLAGS="-march=x86-64-v3"
 else
 	echo "Making x86-64-v3 generic of citron"
 	ARCH_FLAGS="-march=x86-64 -mtune=generic"
@@ -42,24 +42,28 @@ git clone https://git.citron-emu.org/Citron/Citron.git ./citron
 	mkdir build
 	cd build
 	cmake .. -GNinja \
-		-DCITRON_ENABLE_LTO=ON \
 		-DCITRON_USE_BUNDLED_VCPKG=OFF \
 		-DCITRON_USE_BUNDLED_QT=OFF \
-		-DCITRON_USE_QT_WEB_ENGINE=OFF \
-		-DENABLE_QT_TRANSLATION=ON \
 		-DUSE_SYSTEM_QT=ON \
+		-DCITRON_USE_BUNDLED_FFMPEG=OFF \
+		-DCITRON_USE_BUNDLED_SDL2=OFF \
+		-DCITRON_USE_EXTERNAL_SDL2=OFF \
 		-DCITRON_TESTS=OFF \
+		-DCITRON_CHECK_SUBMODULES=OFF \
 		-DCITRON_USE_LLVM_DEMANGLE=OFF \
+		-DCITRON_ENABLE_LTO=ON \
+		-DCITRON_USE_QT_MULTIMEDIA=ON \
+		-DCITRON_USE_QT_WEB_ENGINE=ON \
+		-DENABLE_QT_TRANSLATION=ON \
+		-DUSE_DISCORD_PRESENCE=OFF \
+		-DBUNDLE_SPEEX=ON \
+		-DCITRON_USE_FASTER_LD=OFF \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error" \
-		-DCMAKE_C_FLAGS="$ARCH_FLAGS" \
-		-DUSE_DISCORD_PRESENCE=OFF \
+		-DCMAKE_C_FLAGS="$ARCH_FLAGS -mtune=native" \
 		-DCITRON_ENABLE_PGO_OPTIMIZE=ON \
-		-DBUNDLE_SPEEX=ON \
 		-DCMAKE_SYSTEM_PROCESSOR="$(uname -m)" \
-		-DCMAKE_BUILD_TYPE=MinSizeRel \
-		-DCITRON_USE_BUNDLED_SDL2=ON \
-		-DCITRON_USE_EXTERNAL_SDL2=OFF
+		-DCMAKE_BUILD_TYPE=Release
 	ninja
 	sudo ninja install
 )
