@@ -71,6 +71,7 @@ git clone https://git.citron-emu.org/Citron/Citron.git ./citron
 	echo "$VERSION" > ~/version
 )
 rm -rf ./citron
+VERSION="$(cat ~/version)"
 
 # NOW MAKE APPIMAGE
 mkdir ./AppDir
