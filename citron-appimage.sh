@@ -48,7 +48,7 @@ git clone https://git.citron-emu.org/Citron/Citron.git ./citron
 		-DCITRON_USE_BUNDLED_QT=OFF \
 		-DUSE_SYSTEM_QT=ON \
 		-DCITRON_USE_BUNDLED_FFMPEG=OFF \
-		-DCITRON_USE_BUNDLED_SDL2=OFF \
+		-DCITRON_USE_BUNDLED_SDL2=ON \
 		-DCITRON_USE_EXTERNAL_SDL2=OFF \
 		-DCITRON_TESTS=OFF \
 		-DCITRON_CHECK_SUBMODULES=OFF \
@@ -62,10 +62,10 @@ git clone https://git.citron-emu.org/Citron/Citron.git ./citron
 		-DCITRON_USE_FASTER_LD=OFF \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error" \
-		-DCMAKE_C_FLAGS="$ARCH_FLAGS -mtune=native" \
+		-DCMAKE_C_FLAGS="$ARCH_FLAGS" \
 		-DCITRON_ENABLE_PGO_OPTIMIZE=ON \
 		-DCMAKE_SYSTEM_PROCESSOR="$(uname -m)" \
-		-DCMAKE_BUILD_TYPE=MinSizeRel
+		-DCMAKE_BUILD_TYPE=Release
 	ninja
 	sudo ninja install
 	echo "$VERSION" > ~/version
