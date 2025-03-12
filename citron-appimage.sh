@@ -68,9 +68,9 @@ git clone https://git.citron-emu.org/Citron/Citron.git ./citron
 		-DCMAKE_BUILD_TYPE=MinSizeRel
 	ninja
 	sudo ninja install
+	echo "$VERSION" > ~/version
 )
 rm -rf ./citron
-echo "$VERSION" > ~/version
 
 # NOW MAKE APPIMAGE
 mkdir ./AppDir
