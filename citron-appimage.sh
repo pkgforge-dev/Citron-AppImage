@@ -21,7 +21,7 @@ if [ "$1" = 'v3' ]; then
 	ARCH_FLAGS="-march=x86-64-v3 -mtune=x86-64-v3"
 else
 	echo "Making x86-64-v3 generic of citron"
-	ARCH_FLAGS="-march=generic -mtune=generic"
+	ARCH_FLAGS="-march=x86-64 -mtune=generic"
 fi
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARCH.AppImage.zsync"
 
