@@ -12,7 +12,7 @@ URUNTIME=$(wget --retry-connrefused --tries=30 \
 	| sed 's/[()",{} ]/\n/g' | grep -oi "https.*appimage.*dwarfs.*$ARCH$" | head -1)
 ICON="https://git.citron-emu.org/Citron/Citron/raw/branch/master/dist/citron.svg"
 
-LATEST_TAG=$(wget 'https://git.citron-emu.org/Citron/Citron/tags' -O - \
+LATEST_TAG=$(wget 'https://api.rv.pkgforge.dev/https://git.citron-emu.org/Citron/Citron/tags' -O - \
 	| grep -oP '(?<=/Citron/Citron/releases/tag/)[^"]+' | head -1 | tr -d '"'\''[:space:]')
 
 if [ "$1" = 'v3' ]; then
@@ -29,7 +29,8 @@ UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARC
 if [ "$DEVEL" = 'true' ]; then
 	git clone https://git.citron-emu.org/Citron/Citron.git ./citron
 else
-	wget --retry-connrefused --tries=30 "https://git.citron-emu.org/Citron/Citron/archive/$LATEST_TAG.tar.gz"
+	wget --retry-connrefused --tries=30 \
+		"https://api.rv.pkgforge.dev/https://git.citron-emu.org/Citron/Citron/archive/${LATEST_TAG}.tar.gz"
 	tar xfv *.tar.gz
 	rm -f *.tar.gz
 fi
