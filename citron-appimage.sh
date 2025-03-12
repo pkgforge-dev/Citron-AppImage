@@ -24,7 +24,7 @@ UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARC
 
 # BUILD CITRON
 git clone https://git.citron-emu.org/Citron/Citron.git ./citron
-if [ "$DEVEL" != 'true' ]; then
+if [ "$DEVEL" = 'true' ]; then
 	echo "Making nightly build"
 else
 	LATEST_TAG=$(wget 'https://api.rv.pkgforge.dev/https://git.citron-emu.org/Citron/Citron/tags' -O - \
