@@ -91,15 +91,6 @@ jobs:
             libzip \
             qt6ct
 
-          echo "Hacking makepkg to allow building as root in the container..."
-          sudo sed -i 's|EUID == 0|EUID == 69|g' /usr/bin/makepkg
-          mkdir -p /usr/local/bin
-          cp /usr/bin/makepkg /usr/local/bin
-
-          echo "its -O3 the letter, not -03 the number"
-          sudo sed -i 's|-O2|-O3|; s|MAKEFLAGS=.*|MAKEFLAGS="-j$(nproc)"|; s|#MAKEFLAGS|MAKEFLAGS|' /etc/makepkg.conf
-          cat /etc/makepkg.conf
-
       - name: Install debloated llvm-libs
         run: |
           LLVM_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/llvm-libs-nano-x86_64.pkg.tar.zst"
