@@ -15,10 +15,10 @@ ICON="https://git.citron-emu.org/Citron/Citron/raw/branch/master/dist/citron.svg
 if [ "$1" = 'v3' ]; then
 	echo "Making x86-64-v3 build of citron"
 	ARCH="${ARCH}_v3"
-	ARCH_FLAGS="-march=x86-64-v3"
+	ARCH_FLAGS="-march=x86-64-v3 -O3"
 else
 	echo "Making x86-64-v3 generic of citron"
-	ARCH_FLAGS="-march=x86-64 -mtune=generic"
+	ARCH_FLAGS="-march=x86-64 -mtune=generic -O3"
 fi
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARCH.AppImage.zsync"
 
