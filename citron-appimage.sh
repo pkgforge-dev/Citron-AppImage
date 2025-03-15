@@ -8,8 +8,6 @@ export ARCH="$(uname -m)"
 REPO="https://git.citron-emu.org/Citron/Citron.git"
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
-ICON="https://git.citron-emu.org/Citron/Citron/raw/branch/master/dist/citron.svg"
-DESKTOP="https://git.citron-emu.org/Citron/Citron/raw/branch/master/dist/org.citron_emu.citron.desktop"
 
 if [ "$1" = 'v3' ]; then
 	echo "Making x86-64-v3 optimized build of citron"
@@ -75,8 +73,8 @@ VERSION="$(cat ~/version)"
 mkdir ./AppDir
 cd ./AppDir
 
-wget --retry-connrefused --tries=30 "$DESKTOP" -O ./citron.desktop
-wget --retry-connrefused --tries=30 "$ICON" -O ./citron.svg
+cp -v /usr/share/applications/org.citron_emu.citron.desktop ./citron.desktop
+cp -v /usr/share/icons/hicolor/scalable/apps/org.citron_emu.citron.svg ./citron.svg
 ln -s ./citron.svg ./.DirIcon
 
 # Bundle all libs
