@@ -34,7 +34,7 @@ jobs:
         run: |
           sed -i 's/DownloadUser/#DownloadUser/g' /etc/pacman.conf
           pacman -Syu --noconfirm base-devel strace patchelf curl wget \
-            desktop-file-utils git artix-archlinux-support llvm mesa xorg-server-xvfb \
+            desktop-file-utils git artix-archlinux-support mesa xorg-server-xvfb \
             vulkan-radeon vulkan-intel vulkan-nouveau pulseaudio pulseaudio-alsa pipewire
           pacman-key --init && pacman-key --populate archlinux
           printf "\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n" | tee -a /etc/pacman.conf
