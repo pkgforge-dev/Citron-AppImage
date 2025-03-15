@@ -53,6 +53,7 @@ jobs:
             xcb-util-renderutil \
             libxkbcommon-x11 \
             libxi \
+            libxss \
             nasm \
             qt6-tools \
             qt6-base \
