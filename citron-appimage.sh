@@ -7,9 +7,7 @@ export ARCH="$(uname -m)"
 
 REPO="https://git.citron-emu.org/Citron/Citron.git"
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
-URUNTIME=$(wget --retry-connrefused --tries=30 \
-	https://api.github.com/repos/VHSgunzo/uruntime/releases -O - \
-	| sed 's/[()",{} ]/\n/g' | grep -oi "https.*appimage.*dwarfs.*$ARCH$" | head -1)
+URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
 ICON="https://git.citron-emu.org/Citron/Citron/raw/branch/master/dist/citron.svg"
 
 if [ "$1" = 'v3' ]; then
@@ -130,10 +128,7 @@ chmod +x ./uruntime
 
 #Add udpate info to runtime
 echo "Adding update information \"$UPINFO\" to runtime..."
-printf "$UPINFO" > data.upd_info
-llvm-objcopy --update-section=.upd_info=data.upd_info \
-	--set-section-flags=.upd_info=noload,readonly ./uruntime
-printf 'AI\x02' | dd of=./uruntime bs=1 count=3 seek=8 conv=notrunc
+./uruntime --appimage-addupdinfo "$UPINFO"
 
 echo "Generating AppImage..."
 ./uruntime --appimage-mkdwarfs -f \
