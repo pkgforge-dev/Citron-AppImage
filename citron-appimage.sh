@@ -88,10 +88,7 @@ MimeType=application/x-nx-nro;application/x-nx-nso;application/x-nx-nsp;applicat
 Keywords=Nintendo;Switch;
 StartupWMClass=citron' > ./citron.desktop
 
-if ! wget --retry-connrefused --tries=30 "$ICON" -O citron.svg; then
-	echo "kek"
-	touch ./citron.svg
-fi
+wget --retry-connrefused --tries=30 "$ICON" -O ./citron.svg
 ln -s ./citron.svg ./.DirIcon
 
 # Bundle all libs
