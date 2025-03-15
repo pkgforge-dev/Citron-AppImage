@@ -89,6 +89,7 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/lib/libEGL* \
 	/usr/lib/dri/* \
 	/usr/lib/libvulkan* \
+	/usr/lib/libXss.so* \
 	/usr/lib/qt6/plugins/audio/* \
 	/usr/lib/qt6/plugins/bearer/* \
 	/usr/lib/qt6/plugins/imageformats/* \
