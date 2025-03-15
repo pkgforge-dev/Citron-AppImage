@@ -100,6 +100,8 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/lib/qt6/plugins/xcbglintegrations/* \
 	/usr/lib/qt6/plugins/wayland-*/* \
 	/usr/lib/pulseaudio/* \
+	/usr/lib/pipewire-0.3/* \
+	/usr/lib/spa-0.2/*/* \
 	/usr/lib/alsa-lib/*
 
 # Prepare sharun
