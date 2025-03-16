@@ -38,63 +38,76 @@ jobs:
         if: always()
         run: |
           sed -i 's/DownloadUser/#DownloadUser/g' /etc/pacman.conf
-          pacman -Syu --noconfirm base-devel strace patchelf curl wget \
-            desktop-file-utils git mesa xorg-server-xvfb \
-            vulkan-radeon vulkan-intel vulkan-nouveau pulseaudio pulseaudio-alsa pipewire-audio
-          sudo pacman -Syu --noconfirm \
-            zsync \
+          pacman -Syu --noconfirm \
+            aom \
+            base-devel \
+            boost \
+            boost-libs \
             catch2 \
-            enet \
-            gamemode \
+            clang \
             cmake \
+            curl \
+            dav1d \
+            desktop-file-utils \
+            doxygen \
+            enet \
+            ffmpeg \
+            ffmpeg4.4 \
+            fmt \
+            gamemode \
             gcc13 \
+            git \
             glslang \
             glu \
-            hidapi \
-            xcb-util-wm \
-            xcb-util-image \
-            xcb-util-renderutil \
-            libdecor \
-            libxkbcommon-x11 \
-            libxi \
-            libxss \
-            nasm \
-            qt6-tools \
-            qt6-base \
-            qt6-multimedia \
-            qt6-wayland \
-            mbedtls2 \
-            fmt \
-            nlohmann-json \
-            aom \
-            libass \
             haskell-gnutls \
-            sdl2 \
-            libva \
-            meson \
-            ninja \
-            x264 \
-            x265 \
-            numactl \
-            libvpx \
+            hidapi \
+            libass \
+            libdecor \
             libfdk-aac \
             libopusenc \
-            ffmpeg \
-            svt-av1 \
-            dav1d \
-            boost \
-            clang \
-            vulkan-headers \
-            ffmpeg4.4 \
-            zip \
-            unzip \
-            boost-libs \
-            doxygen \
-            python-pip \
+            libva \
+            libvpx \
+            libxi \
+            libxkbcommon-x11 \
+            libxss \
             libzip \
+            mesa \
+            meson \
             mbedtls \
-            libzip \
-            qt6ct
+            mbedtls2 \
+            nasm \
+            ninja \
+            nlohmann-json \
+            numactl \
+            pipewire-audio \
+            pulseaudio \
+            pulseaudio-alsa \
+            python-pip \
+            qt6-base \
+            qt6-multimedia \
+            qt6-tools \
+            qt6-wayland \
+            qt6ct \
+            sdl2 \
+            strace \
+            svt-av1 \
+            unzip \
+            vulkan-headers \
+            vulkan-nouveau \
+            vulkan-radeon \
+            wget \
+            x264 \
+            x265 \
+            xcb-util-image \
+            xcb-util-renderutil \
+            xcb-util-wm \
+            xorg-server-xvfb \
+            zip \
+            zsync
+
+            if [ "$(uname -m)" = 'x86_64' ]; then
+              pacman -Syu --noconfirm vulkan-intel
+            fi
 
       - name: Install debloated llvm-libs
         run: |
