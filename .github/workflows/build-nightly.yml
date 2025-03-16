@@ -86,7 +86,7 @@ jobs:
             pulseaudio-alsa \
             python-pip \
             qt6-base \
-            qt6ct
+            qt6ct \
             qt6-multimedia \
             qt6-tools \
             qt6-wayland \
