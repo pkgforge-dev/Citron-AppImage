@@ -41,7 +41,7 @@ jobs:
       - name: Check if new AppImage needs to be made
         if: always()
         run: |
-          if [ "$DO_NOT_CONTINUE" = true ]; then
+          if [ -f ~/DO_NOT_CONTINUE ]; then
             echo "There is nothing that needs to be done, exiting..."
             exit 1
           fi
