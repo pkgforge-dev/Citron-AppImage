@@ -3,7 +3,7 @@
 set -ex
 
 if [ "$DEVEL" = true ]; then
-	pacman -Syu --noconfirm git
+	pacman -Syu --noconfirm git wget
 	# check if there is a new commit to build at citron
 	LAST_HASH="$(git ls-remote 'https://git.citron-emu.org/Citron/Citron.git' HEAD | cut -c 1-9)"
 	LAST_BUILD_HASH="$(wget --retry-connrefused --tries=30 \
