@@ -43,7 +43,7 @@ jobs:
         run: |
           if [ -f ~/DO_NOT_CONTINUE ]; then
             echo "There is nothing that needs to be done, exiting..."
-            exit 1
+            gh action cancel ${{ github.run_id }}
           fi
 
       - name: Compile Citron (Normal)
