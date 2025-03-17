@@ -36,7 +36,7 @@ jobs:
 
       - name: Install dependencies
         if: always()
-        run: chmod +x ./get-dependencies.sh && ./get-dependencies.sh
+        run: chmod +x ./get-dependencies.sh && DEVEL=true ./get-dependencies.sh
 
       - name: Compile Citron (Normal)
         if: ${{ matrix.optimized == false }}
