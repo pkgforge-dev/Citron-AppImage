@@ -23,7 +23,8 @@ if [ "$DEVEL" = true ]; then
 		echo "Last upstream HEAD hash is $LAST_HASH"
 		echo "Last AppImage hash is $LAST_BUILD_HASH"
 		echo "---------------------------------------------------------------"
-		exit 1
+		export DO_NOT_CONTINUE=true
+		exit 0
 	fi
 fi
 
