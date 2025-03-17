@@ -36,15 +36,7 @@ jobs:
 
       - name: Install dependencies
         if: always()
-        run: chmod +x ./get-dependencies.sh && DEVEL=true ./get-dependencies.sh
-
-      - name: Check if new AppImage needs to be made
-        if: always()
-        run: |
-          if [ -f ~/DO_NOT_CONTINUE ]; then
-            echo "There is nothing that needs to be done, exiting..."
-            gh action cancel ${{ github.run_id }}
-          fi
+        run: chmod +x ./get-dependencies.sh && ./get-dependencies.sh
 
       - name: Compile Citron (Normal)
         if: ${{ matrix.optimized == false }}
