@@ -184,6 +184,14 @@ jobs:
           export VERSION="$(cat version)"
           echo "APP_VERSION=${VERSION}" >> "${GITHUB_ENV}"
 
+      - name: Del Previous Release
+        run: |
+          gh release delete "nightly" --repo "${GITHUB_REPOSITORY}" --cleanup-tag  -y
+          sleep 5
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        continue-on-error: true
+
       - uses: softprops/action-gh-release@v2
         with:
           name: "Continuous Build (Nightly Version: ${{ env.APP_VERSION }})"
