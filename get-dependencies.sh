@@ -2,32 +2,6 @@
 
 set -ex
 
-if [ "$DEVEL" = true ]; then
-	pacman -Syu --noconfirm git wget
-	# check if there is a new commit to build at citron
-	LAST_HASH="$(git ls-remote 'https://git.citron-emu.org/Citron/Citron.git' HEAD | cut -c 1-9)"
-	LAST_BUILD_HASH="$(wget --retry-connrefused --tries=30 \
-		'https://api.github.com/repos/pkgforge-dev/Citron-AppImage/releases' -O - \
-		| sed 's/[()",{} ]/\n/g' \
-		| grep -oi '/nightly/Citron.*AppImage$' \
-		| awk -F'-' '{print $2; exit}')"
-
-	if [ -z "$LAST_HASH" ]; then
-		echo "Failed to get last commit hash from citron, bailing out"
-		exit 1
-	elif [ -z "$LAST_BUILD_HASH" ]; then
-		echo "Failed to get last build hash from AppImage repo, bailing out"
-		exit 1
-	elif [ "$LAST_HASH" = "$LAST_BUILD_HASH" ]; then
-		echo "There no new builds that need to be made, stopping..."
-		echo "Last upstream HEAD hash is $LAST_HASH"
-		echo "Last AppImage hash is $LAST_BUILD_HASH"
-		echo "---------------------------------------------------------------"
-		touch ~/DO_NOT_CONTINUE
-		exit 0
-	fi
-fi
-
 sed -i 's/DownloadUser/#DownloadUser/g' /etc/pacman.conf
 
 if [ "$(uname -m)" = 'x86_64' ]; then
