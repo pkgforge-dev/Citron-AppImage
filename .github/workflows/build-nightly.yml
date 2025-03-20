@@ -82,14 +82,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4.1.9
-        if: ${{ matrix.optimized == true }}
         with:
-          name: citron-optimized-appimage-${{ matrix.arch }}
+          name: citron-optimized-appimage-x86_64
 
       - uses: actions/download-artifact@v4.1.9
-        if: ${{ matrix.optimized == false }}
         with:
-          name: citron-normal-appimage-${{ matrix.arch }}
+          name: citron-normal-appimage-x86_64
+
+      - uses: actions/download-artifact@v4.1.9
+        with:
+          name: citron-normal-appimage-aarch64
 
       - uses: actions/download-artifact@v4.1.9
         with:
