@@ -116,6 +116,10 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/lib/alsa-lib/*
 
 # Prepare sharun
+if [ "$ARCH" = 'aarch64' ]; then
+	# allow the host vulkan to be used for aarch64 given the sed situation
+	echo 'SHARUN_ALLOW_SYS_VKICD=1' > ./.env
+fi
 ln ./sharun ./AppRun
 ./sharun -g
 
