@@ -54,7 +54,7 @@ jobs:
           mv *.AppImage* dist/
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4.6.1
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: citron-${{ matrix.optimized && 'optimized' || 'normal' }}-appimage-${{ matrix.arch }}
           path: "dist"
@@ -66,7 +66,7 @@ jobs:
           echo "APP_VERSION=$(cat ~/version)" >> "${GITHUB_ENV}"
 
       - name: Upload version file
-        uses: actions/upload-artifact@v4.6.1
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: version
           path: ~/version
