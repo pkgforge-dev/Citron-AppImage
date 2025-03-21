@@ -34,11 +34,9 @@ pacman -Syu --noconfirm \
 	ffmpeg4.4 \
 	fmt \
 	gamemode \
-	gcc13 \
 	git \
 	glslang \
 	glu \
-	haskell-gnutls \
 	hidapi \
 	libass \
 	libdecor \
@@ -70,7 +68,6 @@ pacman -Syu --noconfirm \
 	qt6-wayland \
 	sdl2 \
 	strace \
-	svt-av1 \
 	unzip \
 	vulkan-headers \
 	vulkan-nouveau \
@@ -86,7 +83,9 @@ pacman -Syu --noconfirm \
 	zsync
 
 if [ "$(uname -m)" = 'x86_64' ]; then
-	pacman -Syu --noconfirm vulkan-intel
+	pacman -Syu --noconfirm vulkan-intel haskell-gnutls gcc13 svt-av1
+else
+	pacman -Syu --noconfirm vulkan-freedreno vulkan-panfrost
 fi
 
 

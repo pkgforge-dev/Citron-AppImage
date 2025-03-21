@@ -23,11 +23,10 @@ jobs:
             optimized: true
             name: "Citron Build (Optimized)"
             arch: x86_64
-          # TODO: Debug ARM builds (fails with intel-vulkan dep for arch on arm
-          # - runs-on: ubuntu-24.04-arm
-          #   name: "Citron Build (Normal)"
-          #   optimized: false
-          #   arch: aarch64
+          - runs-on: ubuntu-24.04-arm
+            name: "Citron Build (Normal)"
+            optimized: false
+            arch: aarch64
     container: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
       - uses: actions/checkout@v4
@@ -67,11 +66,11 @@ jobs:
           echo "APP_VERSION=$(cat ~/version)" >> "${GITHUB_ENV}"
 
       - name: Upload version file
-        if: ${{ matrix.optimized == false }}
         uses: actions/upload-artifact@v4.6.1
         with:
           name: version
           path: ~/version
+          overwrite: true
 
   release:
     name: "release"
@@ -90,9 +89,9 @@ jobs:
         with:
           name: citron-normal-appimage-x86_64
 
-      # - uses: actions/download-artifact@v4.1.9
-      #   with:
-      #     name: citron-normal-appimage-aarch64
+      - uses: actions/download-artifact@v4.1.9
+        with:
+          name: citron-normal-appimage-aarch64
 
       - uses: actions/download-artifact@v4.1.9
         with:

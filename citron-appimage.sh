@@ -9,14 +9,20 @@ REPO="https://git.citron-emu.org/Citron/Citron.git"
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
 
-if [ "$1" = 'v3' ]; then
-	echo "Making x86-64-v3 optimized build of citron"
-	ARCH="${ARCH}_v3"
-	ARCH_FLAGS="-march=x86-64-v3 -O3"
+if [ "$ARCH" = 'x86_64' ]; then
+	if [ "$1" = 'v3' ]; then
+		echo "Making x86-64-v3 optimized build of citron"
+		ARCH="${ARCH}_v3"
+		ARCH_FLAGS="-march=x86-64-v3 -O3"
+	else
+		echo "Making x86-64 generic build of citron"
+		ARCH_FLAGS="-march=x86-64 -mtune=generic -O3"
+	fi
 else
-	echo "Making x86-64 generic build of citron"
-	ARCH_FLAGS="-march=x86-64 -mtune=generic -O3"
+	echo "Making aarch64 build of citron"
+	ARCH_FLAGS="-march=armv8-a -mtune=generic -O3"
 fi
+
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARCH.AppImage.zsync"
 
 # BUILD CITRON, fallback to mirror if upstream repo fails to clone
