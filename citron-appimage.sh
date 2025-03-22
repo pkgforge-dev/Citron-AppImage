@@ -88,6 +88,11 @@ cp -v /usr/share/applications/org.citron_emu.citron.desktop ./citron.desktop
 cp -v /usr/share/icons/hicolor/scalable/apps/org.citron_emu.citron.svg ./citron.svg
 ln -s ./citron.svg ./.DirIcon
 
+if [ "$DEVEL" = 'true' ]; then
+	sed -i 's|Name=citron|Name=citron nightly|' ./citron.desktop
+	UPINFO="$(echo "$UPINFO" | sed 's|latest|nightly|')"
+fi
+
 # Bundle all libs
 wget --retry-connrefused --tries=30 "$LIB4BN" -O ./lib4bin
 chmod +x ./lib4bin
