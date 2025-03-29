@@ -69,7 +69,7 @@ fi
 		-DBUNDLE_SPEEX=ON \
 		-DCITRON_USE_FASTER_LD=OFF \
 		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error -Wno-comment" \
+		-DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error -w" \
 		-DCMAKE_C_FLAGS="$ARCH_FLAGS" \
 		-DCMAKE_SYSTEM_PROCESSOR="$(uname -m)" \
 		-DCMAKE_BUILD_TYPE=Release
@@ -102,9 +102,11 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/lib/libGL.so* \
 	/usr/lib/libEGL* \
 	/usr/lib/dri/* \
+	/usr/lib/vdpau/* \
 	/usr/lib/libvulkan* \
 	/usr/lib/libXss.so* \
 	/usr/lib/libdecor-0.so* \
+	/usr/lib/libgamemode.so* \
 	/usr/lib/qt6/plugins/audio/* \
 	/usr/lib/qt6/plugins/bearer/* \
 	/usr/lib/qt6/plugins/imageformats/* \
@@ -144,7 +146,7 @@ echo "Generating AppImage..."
 ./uruntime --appimage-mkdwarfs -f \
 	--set-owner 0 --set-group 0 \
 	--no-history --no-create-timestamp \
-	--compression zstd:level=22 -S24 -B16 \
+	--compression zstd:level=22 -S24 -B32 \
 	--header uruntime \
 	-i ./AppDir -o Citron-"$VERSION"-anylinux-"$ARCH".AppImage
 
