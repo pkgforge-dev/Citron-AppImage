@@ -21,3 +21,9 @@ It is possible that this appimage may fail to work with appimagelauncher, I reco
 * [soar](https://github.com/pkgforge/soar) `soar install citron`
 
 This appimage works without fuse2 as it can use fuse3 instead, it can also work without fuse at all thanks to the [uruntime](https://github.com/VHSgunzo/uruntime)
+
+<details>
+  <summary><b><i>raison d'être</i></b></summary>
+    <img src="https://github.com/user-attachments/assets/d40067a6-37d2-4784-927c-2c7f7cc6104b" alt="Inspiration Image">
+  </a>
+</details>
