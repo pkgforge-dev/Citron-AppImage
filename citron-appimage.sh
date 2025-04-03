@@ -72,7 +72,8 @@ fi
 		-DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error -w" \
 		-DCMAKE_C_FLAGS="$ARCH_FLAGS" \
 		-DCMAKE_SYSTEM_PROCESSOR="$(uname -m)" \
-		-DCMAKE_BUILD_TYPE=Release
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5
 	ninja
 	sudo ninja install
 	echo "$VERSION" >~/version
