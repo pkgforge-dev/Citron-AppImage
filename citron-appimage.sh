@@ -49,6 +49,22 @@ fi
 	#Replaces 'boost::asio::io_service' with 'boost::asio::io_context' for compatibility with Boost.ASIO versions 1.74.0 and later
 	find src -type f -name '*.cpp' -exec sed -i 's/boost::asio::io_service/boost::asio::io_context/g' {} \;
 
+	#fix build on newer cmake
+	sed -i 's/cmake_minimum_required(VERSION 2.6...3.0.2)/cmake_minimum_required(VERSION 3.5)/' \
+		externals/xbyak/CMakeLists.txt
+	sed -i 's/cmake_minimum_required(VERSION 3.1)/cmake_minimum_required(VERSION 3.5)/' \
+		externals/dynarmic/externals/robin-map/CMakeLists.txt
+	sed -i 's/cmake_minimum_required(VERSION 2.6)/cmake_minimum_required(VERSION 3.5)/' \
+		externals/mbedtls/CMakeLists.txt
+	sed -i 's/cmake_minimum_required (VERSION 3.2.0)/cmake_minimum_required(VERSION 3.5)/' \
+		externals/discord-rpc/CMakeLists.txt
+	sed -i 's/cmake_minimum_required(VERSION 3.0)/cmake_minimum_required(VERSION 3.5)/' \
+		externals/sirit/externals/SPIRV-Headers/CMakeLists.txt
+
+	# Correct deprecated Boost include
+	sed -i 's/#include <boost\/process\/async_pipe\.hpp>/#include <boost\/process\/v1\/async_pipe\.hpp>/g' \
+		src/core/debugger/debugger.cpp
+
 	mkdir build
 	cd build
 	cmake .. -GNinja \
