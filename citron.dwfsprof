@@ -49,7 +49,7 @@ shared/lib/libcairo.so.2.11804.4
 shared/lib/libgobject-2.0.so.0.8400.1
 shared/lib/libglib-2.0.so.0.8400.1
 shared/lib/libsnappy.so.1.2.2
-shared/lib/libaom.so.3.12.0
+shared/lib/libaom.so.3.12.1
 shared/lib/libgsm.so.1.0.22
 shared/lib/libjxl.so.0.11.1
 shared/lib/libjxl_threads.so.0.11.1
@@ -128,7 +128,7 @@ shared/lib/libkrb5support.so.0.1
 shared/lib/libkeyutils.so.1.10
 shared/lib/libresolv.so.2
 shared/lib/libproxy/libpxbackend-1.0.so
-shared/lib/libcap.so.2.75
+shared/lib/libcap.so.2.76
 shared/lib/libgio-2.0.so.0.8400.1
 shared/lib/libgdk_pixbuf-2.0.so.0.4200.12
 shared/lib/libpangocairo-1.0.so.0.5600.3
