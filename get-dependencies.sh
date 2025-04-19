@@ -72,6 +72,7 @@ pacman -Syu --noconfirm \
 	strace \
 	unzip \
 	vulkan-headers \
+	vulkan-mesa-layers \
 	vulkan-nouveau \
 	vulkan-radeon \
 	wget \
