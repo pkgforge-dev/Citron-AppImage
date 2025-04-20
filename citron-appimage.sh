@@ -102,9 +102,12 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/lib/libGLX* \
 	/usr/lib/libGL.so* \
 	/usr/lib/libEGL* \
+	/usr/lib/libdl.so* \
+	/usr/lib/librt.so* \
 	/usr/lib/dri/* \
 	/usr/lib/vdpau/* \
 	/usr/lib/libvulkan* \
+	/usr/lib/libVkLayer* \
 	/usr/lib/libXss.so* \
 	/usr/lib/libdecor-0.so* \
 	/usr/lib/libgamemode.so* \
