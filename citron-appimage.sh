@@ -47,6 +47,8 @@ fi
 	git submodule update --init --recursive -j$(nproc)
 
 	#Replaces 'boost::asio::io_service' with 'boost::asio::io_context' for compatibility with Boost.ASIO versions 1.74.0 and later
+	#UPSTREAM FIXED THIS https://git.citron-emu.org/Citron/Citron/commit/21ca0b31191c4af56a78576c502e8382b4c128b4
+	#TODO: Remove once a new stable release is made
 	find src -type f -name '*.cpp' -exec sed -i 's/boost::asio::io_service/boost::asio::io_context/g' {} \;
 
 	mkdir build
