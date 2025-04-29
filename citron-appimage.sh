@@ -26,7 +26,7 @@ fi
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARCH.AppImage.zsync"
 
 # BUILD CITRON, fallback to mirror if upstream repo fails to clone
-if ! git clone 'https://git.citron-emu.org/Citron/Citron.git' ./citron; then
+if ! git clone 'https://git.citron-emu.org/citron/emu.git' ./citron; then
 	echo "Using mirror instead..."
 	rm -rf ./citron || true
 	git clone 'https://github.com/pkgforge-community/git.citron-emu.org-Citron-Citron.git' ./citron
