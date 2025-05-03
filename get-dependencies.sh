@@ -89,7 +89,15 @@ if [ "$(uname -m)" = 'x86_64' ]; then
 	pacman -Syu --noconfirm vulkan-intel haskell-gnutls gcc13 svt-av1
 else
 	pacman -Syu --noconfirm vulkan-freedreno vulkan-panfrost
+	
+	# make sse2neon needed for aarch64
+	git clone https://github.com/DLTcollab/sse2neon.git ./sse2neon && (
+		cd ./sse2neon
+		make
+		cp -v ./sse2neon.h /usr/include
+	)
 fi
+
 
 # fix build failing with new version of boost
 # /usr/include/boost/async_pipe.hpp is gone on boos-t1.88. not sure if intended or a bug
