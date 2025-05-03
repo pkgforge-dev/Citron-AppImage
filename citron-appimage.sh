@@ -148,7 +148,7 @@ echo "Generating AppImage..."
 	--set-owner 0 --set-group 0 \
 	--no-history --no-create-timestamp \
 	--categorize=hotness --hotness-list=citron.dwfsprof \
-	--compression zstd:level=22 -S26 -B32 \
+	--compression zstd:level=22 -S26 -B8 \
 	--header uruntime \
 	-i ./AppDir -o Citron-"$VERSION"-anylinux-"$ARCH".AppImage
 
