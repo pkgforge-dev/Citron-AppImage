@@ -91,7 +91,6 @@ else
 	pacman -Syu --noconfirm vulkan-freedreno vulkan-panfrost
 fi
 
-
 # fix build failing with new version of boost
 # /usr/include/boost/async_pipe.hpp is gone on boos-t1.88. not sure if intended or a bug
 if [ "$(uname -m)" = 'x86_64' ]; then
