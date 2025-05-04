@@ -51,6 +51,9 @@ fi
 	#TODO: Remove once a new stable release is made
 	find src -type f -name '*.cpp' -exec sed -i 's/boost::asio::io_service/boost::asio::io_context/g' {} \;
 
+	# remove mysterious sse2neon library dependency
+	sed -i '/sse2neon/d' ./src/video_core/CMakeLists.txt
+
 	mkdir build
 	cd build
 	cmake .. -GNinja \
