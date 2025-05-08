@@ -5,7 +5,7 @@ set -ex
 export APPIMAGE_EXTRACT_AND_RUN=1
 export ARCH="$(uname -m)"
 
-REPO="https://git.citron-emu.org/Citron/Citron.git"
+REPO="https://git.citron-emu.org/citron/emu.git"
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
 
@@ -26,7 +26,7 @@ fi
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARCH.AppImage.zsync"
 
 # BUILD CITRON, fallback to mirror if upstream repo fails to clone
-if ! git clone 'https://git.citron-emu.org/citron/emu.git' ./citron; then
+if ! git clone "$REPO" ./citron; then
 	echo "Using mirror instead..."
 	rm -rf ./citron || true
 	git clone 'https://github.com/pkgforge-community/git.citron-emu.org-Citron-Citron.git' ./citron
@@ -46,10 +46,11 @@ fi
 	fi
 	git submodule update --init --recursive -j$(nproc)
 
-	#Replaces 'boost::asio::io_service' with 'boost::asio::io_context' for compatibility with Boost.ASIO versions 1.74.0 and later
-	#UPSTREAM FIXED THIS https://git.citron-emu.org/Citron/Citron/commit/21ca0b31191c4af56a78576c502e8382b4c128b4
-	#TODO: Remove once a new stable release is made
-	find src -type f -name '*.cpp' -exec sed -i 's/boost::asio::io_service/boost::asio::io_context/g' {} \;
+	# Upstream fixed this issue, but a newer version of boost came out and broke it again 🤣
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::asio::io_service\b/boost::asio::io_context/g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::asio::io_service::strand\b/boost::asio::strand<boost::asio::io_context::executor_type>/g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include *<boost/process/async_pipe.hpp>|#include <boost/process/v1/async_pipe.hpp>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::process::async_pipe\b/boost::process::v1::async_pipe/g'
 
 	# remove mysterious sse2neon library dependency
 	sed -i '/sse2neon/d' ./src/video_core/CMakeLists.txt
