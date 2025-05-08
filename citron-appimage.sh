@@ -47,11 +47,10 @@ fi
 	git submodule update --init --recursive -j$(nproc)
 
 	# Upstream fixed this issue, but a newer version of boost came out and broke it again 🤣
-	find . -type f -name '*.cpp' -o -name '*.h' -exec \
-		sed -i -e 's/\bboost::asio::io_service\b/boost::asio::io_context/g' \
-		-e 's/\bboost::asio::io_service::strand\b/boost::asio::strand<boost::asio::io_context::executor_type>/g' \
-		-e 's|#include *<boost/process/async_pipe.hpp>|#include <boost/process/v1/async_pipe.hpp>|g' \
-		-e 's/\bboost::process::async_pipe\b/boost::process::v1::async_pipe/g' {} +
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::asio::io_service\b/boost::asio::io_context/g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::asio::io_service::strand\b/boost::asio::strand<boost::asio::io_context::executor_type>/g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include *<boost/process/async_pipe.hpp>|#include <boost/process/v1/async_pipe.hpp>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::process::async_pipe\b/boost::process::v1::async_pipe/g'
 
 	# remove mysterious sse2neon library dependency
 	sed -i '/sse2neon/d' ./src/video_core/CMakeLists.txt
