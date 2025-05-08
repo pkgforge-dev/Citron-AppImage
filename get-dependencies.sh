@@ -91,13 +91,6 @@ else
 	pacman -Syu --noconfirm vulkan-freedreno vulkan-panfrost
 fi
 
-# fix build failing with new version of boost
-# /usr/include/boost/async_pipe.hpp is gone on boos-t1.88. not sure if intended or a bug
-if [ "$(uname -m)" = 'x86_64' ]; then
-	wget 'https://archive.archlinux.org/packages/b/boost/boost-1.87.0-3-x86_64.pkg.tar.zst'           -O ./boost.pkg.tar.zst
-	wget 'https://archive.archlinux.org/packages/b/boost-libs/boost-libs-1.87.0-3-x86_64.pkg.tar.zst' -O ./boost-libs.pkg.tar.zst
-fi
-
 echo "Installing debloated pckages..."
 echo "---------------------------------------------------------------"
 wget --retry-connrefused --tries=30 "$LLVM_URL" -O ./llvm-libs.pkg.tar.zst
