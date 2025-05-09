@@ -109,6 +109,7 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/lib/libGL.so* \
 	/usr/lib/libEGL* \
 	/usr/lib/dri/* \
+	/usr/lib/gbm/* \
 	/usr/lib/vdpau/* \
 	/usr/lib/libvulkan* \
 	/usr/lib/libVkLayer* \
