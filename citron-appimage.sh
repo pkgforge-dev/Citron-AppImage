@@ -85,7 +85,7 @@ cp -v /usr/share/icons/hicolor/scalable/apps/*citron*.svg  ./
 cp -v /usr/share/icons/hicolor/scalable/apps/*citron*.svg  ./.DirIcon
 
 if [ "$DEVEL" = 'true' ]; then
-	sed -i 's|Name=citron|Name=citron nightly|' ./citron.desktop
+	sed -i 's|Name=citron|Name=citron nightly|' ./*.desktop
 	UPINFO="$(echo "$UPINFO" | sed 's|latest|nightly|')"
 fi
 
