@@ -80,9 +80,9 @@ VERSION="$(cat ~/version)"
 mkdir ./AppDir
 cd ./AppDir
 
-cp -v /usr/share/applications/*citron*.desktop            ./
-cp -v /usr/share/icons/hicolor/scalable/apps/citron*.svg  ./
-cp -v /usr/share/icons/hicolor/scalable/apps/*citron*.svg ./.DirIcon
+cp -v /usr/share/applications/*citron*.desktop             ./
+cp -v /usr/share/icons/hicolor/scalable/apps/*citron*.svg  ./
+cp -v /usr/share/icons/hicolor/scalable/apps/*citron*.svg  ./.DirIcon
 
 if [ "$DEVEL" = 'true' ]; then
 	sed -i 's|Name=citron|Name=citron nightly|' ./citron.desktop
