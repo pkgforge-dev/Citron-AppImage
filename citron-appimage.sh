@@ -22,7 +22,7 @@ fi
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARCH.AppImage.zsync"
 
 # BUILD CITRON, fallback to mirror if upstream repo fails to clone
-git clone --recursive --depth 1 "https://git.citron-emu.org/citron/emu.git" ./citron && (
+git clone --recursive "https://git.citron-emu.org/citron/emu.git" ./citron && (
 	cd ./citron
 	if [ "$DEVEL" = 'true' ]; then
 		CITRON_TAG="$(git rev-parse --short HEAD)"
