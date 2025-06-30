@@ -25,7 +25,6 @@ pacman -Syu --noconfirm \
 	glslang             \
 	glu                 \
 	hidapi              \
-	intel-media-driver  \
 	libass              \
 	libdecor            \
 	libfdk-aac          \
@@ -71,7 +70,7 @@ pacman -Syu --noconfirm \
 case "$ARCH" in
 	'x86_64')
 		PKG_TYPE='x86_64.pkg.tar.zst'
-		pacman -Syu --noconfirm vulkan-intel haskell-gnutls svt-av1
+		pacman -Syu --noconfirm vulkan-intel intel-media-driver haskell-gnutls svt-av1
 		;;
 	'aarch64')
 		PKG_TYPE='aarch64.pkg.tar.xz'
