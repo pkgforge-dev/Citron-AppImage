@@ -73,6 +73,7 @@ jobs:
           overwrite: true
 
   release:
+    if: ${{ github.ref_name == 'main' }}
     name: "release"
     needs: [build]
     permissions:
@@ -97,41 +98,19 @@ jobs:
         with:
           name: version
 
-      - name: Read version
+      - name: Read version and Get date
         run: |
-          export VERSION="$(cat version)"
-          export SNAPSHOT_TAG="$(date --utc +'%Y%m%d-%H%M%S')"
-          echo "APP_VERSION=${VERSION}" >> "${GITHUB_ENV}"
-          echo SNAPSHOT_TAG="${SNAPSHOT_TAG}" >> "${GITHUB_ENV}"
+          echo "VERSION=$(cat version)" >> "${GITHUB_ENV}"
+          echo "DATE=$(date +'%Y-%m-%d_%s')" >> "${GITHUB_ENV}"
 
-      - name: Del Previous Release
-        run: |
-          gh release delete "${APP_VERSION}" --repo "${GITHUB_REPOSITORY}" --cleanup-tag  -y
-          sleep 5
-        env:
-          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        continue-on-error: true
-
-      - name: Continuous Releaser
-        uses: softprops/action-gh-release@v2
+      - name: Release Artifacts
+        uses: softprops/action-gh-release@v2.2.2
         with:
-          name: "Citron AppImage ${{ env.APP_VERSION }}"
-          tag_name: "${{ env.APP_VERSION }}"
+          name: "Citron: ${{ env.VERSION }}"
+          tag_name: "${{ env.VERSION }}@${{ env.DATE }}"
           prerelease: false
           draft: false
           generate_release_notes: false
           make_latest: true
-          files: |
-            *.AppImage*
-
-      - name: Snapshot Releaser
-        uses: softprops/action-gh-release@v2.2.2
-        with:
-          name: "Snapshot ${{ env.APP_VERSION }}"
-          tag_name: "${{ env.SNAPSHOT_TAG }}"
-          prerelease: false
-          draft: false
-          generate_release_notes: false
-          make_latest: false
           files: |
             *.AppImage*
