@@ -73,6 +73,7 @@ jobs:
           overwrite: true
 
   release:
+    if: ${{ github.ref_name == 'main' }}
     name: "release"
     needs: [build]
     permissions:
@@ -103,9 +104,7 @@ jobs:
           echo "APP_VERSION=${VERSION}" >> "${GITHUB_ENV}"
 
       - name: Del Previous Release
-        run: |
-          gh release delete "nightly" --repo "${GITHUB_REPOSITORY}" --cleanup-tag  -y
-          sleep 5
+        run: gh release delete "nightly" --repo "${GITHUB_REPOSITORY}" --cleanup-tag -y && sleep 5
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         continue-on-error: true
