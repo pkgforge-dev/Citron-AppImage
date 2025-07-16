@@ -1,4 +1,7 @@
-# Citron-AppImage
+# Citron-AppImage 🐧
+
+[![GitHub Downloads](https://img.shields.io/github/downloads/pkgforge-dev/Citron-AppImage/total?logo=github&label=GitHub%20Downloads)](https://github.com/pkgforge-dev/Citron-AppImage/releases/latest)
+[![CI Build Status](https://github.com//pkgforge-dev/Citron-AppImage/actions/workflows/build-stable.yml/badge.svg)](https://github.com/pkgforge-dev/Citron-AppImage/releases/latest)
 
 This repository makes builds for **aarch64**, **x86_64** (generic) and **x86_64_v3**. If your CPU is less than 10 years old use the x86_64_v3 build since it has a significant performance boost.
 
