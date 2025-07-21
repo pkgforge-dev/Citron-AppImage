@@ -122,5 +122,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add ./LATEST_VERSION
-          git commit -m 'bump `LATEST_VERSION` [skip ci]'
+          git commit --allow-empty -m 'bump `LATEST_VERSION` [skip ci]'
           git push
