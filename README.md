@@ -9,6 +9,10 @@ This repository makes builds for **aarch64**, **x86_64** (generic) and **x86_64_
 
 * [Latest Nightly Release](https://github.com/pkgforge-dev/Citron-AppImage/releases/tag/nightly)
 
+---
+
+**Looking for AppImages of other emulators? Check:** [AnyLinux-AppImages](https://pkgforge-dev.github.io/Anylinux-AppImages/) 
+
 ----
 
 AppImage made using [sharun](https://github.com/VHSgunzo/sharun), which makes it extremely easy to turn any binary into a portable package without using containers or similar tricks.
@@ -31,6 +35,3 @@ This appimage works without fuse2 as it can use fuse3 instead, it can also work 
   </a>
 </details>
 
----
-
-More at: [AnyLinux-AppImages](https://pkgforge-dev.github.io/Anylinux-AppImages/) 
