@@ -47,16 +47,15 @@ git clone --recursive "https://git.citron-emu.org/citron/emu.git" ./citron && (
 	mkdir build
 	cd build
 	cmake .. -GNinja \
-		-DCITRON_USE_BUNDLED_VCPKG=OFF                \
 		-DCITRON_USE_BUNDLED_QT=OFF                   \
 		-DUSE_SYSTEM_QT=ON                            \
-		-DCITRON_USE_BUNDLED_FFMPEG=ON                \
 		-DCITRON_USE_BUNDLED_SDL2=ON                  \
 		-DCITRON_USE_EXTERNAL_SDL2=OFF                \
 		-DCITRON_TESTS=OFF                            \
-		-DCITRON_CHECK_SUBMODULES=OFF                 \
+		-DCITRON_CHECK_SUBMODULES=ON                  \
 		-DCITRON_USE_LLVM_DEMANGLE=OFF                \
 		-DCITRON_ENABLE_LTO=ON                        \
+		-DCITRON_USE_EXTERNAL_VULKAN_SPIRV_TOOLS=ON   \
 		-DCITRON_USE_QT_MULTIMEDIA=OFF                \
 		-DCITRON_USE_QT_WEB_ENGINE=OFF                \
 		-DENABLE_QT_TRANSLATION=ON                    \
