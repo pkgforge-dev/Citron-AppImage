@@ -12,7 +12,6 @@ pacman -Syu --noconfirm \
 	clang               \
 	cmake               \
 	curl                \
-	dav1d               \
 	doxygen             \
 	enet                \
 	fmt                 \
@@ -25,10 +24,6 @@ pacman -Syu --noconfirm \
 	hidapi              \
 	libass              \
 	libdecor            \
-	libfdk-aac          \
-	libopusenc          \
-	libva               \
-	libvpx              \
 	libxi               \
 	libxkbcommon-x11    \
 	libxss              \
@@ -44,7 +39,6 @@ pacman -Syu --noconfirm \
 	pulseaudio-alsa     \
 	qt6-base            \
 	qt6ct               \
-	qt6-multimedia      \
 	qt6-tools           \
 	qt6-wayland         \
 	sdl2                \
@@ -54,8 +48,6 @@ pacman -Syu --noconfirm \
 	vulkan-nouveau      \
 	vulkan-radeon       \
 	wget                \
-	x264                \
-	x265                \
 	xcb-util-cursor     \
 	xcb-util-image      \
 	xcb-util-renderutil \
