@@ -9,6 +9,12 @@ This repository makes builds for **aarch64**, **x86_64** (generic) and **x86_64_
 
 * [Latest Nightly Release](https://github.com/pkgforge-dev/Citron-AppImage/releases/tag/nightly)
 
+# READ THIS IF YOU HAVE ISSUES
+
+If you are on wayland (specially GNOME wayland) and get freezes or crahes you are likely affected by this issue that affects all Qt6 apps: https://github.com/pkgforge-dev/Citron-AppImage/issues/50
+
+To fix it simply set the env variable `QT_QPA_PLATFORM=xcb`
+
 ---
 
 **Looking for AppImages of other emulators? Check:** [AnyLinux-AppImages](https://pkgforge-dev.github.io/Anylinux-AppImages/) 
