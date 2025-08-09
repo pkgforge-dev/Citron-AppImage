@@ -3,7 +3,7 @@
 set -ex
 
 ARCH="$(uname -m)"
-SHARUN="https://github.com/VHSgunzo/sharun/releases/latest/download/sharun-$ARCH-aio"
+SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/quick-sharun.sh"
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
 URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-lite-$ARCH"
 
@@ -76,51 +76,28 @@ git clone --recursive "https://git.citron-emu.org/citron/emu.git" ./citron && (
 rm -rf ./citron
 VERSION="$(cat ~/version)"
 
-# NOW MAKE APPIMAGE
-mkdir ./AppDir
-cd ./AppDir
-
-cp -v /usr/share/applications/*citron*.desktop             ./
-cp -v /usr/share/icons/hicolor/scalable/apps/*citron*.svg  ./
-cp -v /usr/share/icons/hicolor/scalable/apps/*citron*.svg  ./.DirIcon
-
+# PREPARE APPDIR
+mkdir -p ./AppDir
+cp -v /usr/share/applications/*citron*.desktop             ./AppDir
+cp -v /usr/share/icons/hicolor/scalable/apps/*citron*.svg  ./AppDir
+cp -v /usr/share/icons/hicolor/scalable/apps/*citron*.svg  ./AppDir/.DirIcon
 if [ "$DEVEL" = 'true' ]; then
-	sed -i 's|Name=citron|Name=citron nightly|' ./*.desktop
+	sed -i 's|Name=citron|Name=citron nightly|' ./AppDir/*.desktop
 	UPINFO="$(echo "$UPINFO" | sed 's|latest|nightly|')"
 fi
 
 # ADD LIBRARIES
-wget --retry-connrefused --tries=30 "$SHARUN" -O ./sharun-aio
-chmod +x ./sharun-aio
-xvfb-run -a \
-	./sharun-aio l -p -v -e -s -k            \
-	/usr/bin/citron*                         \
-	/usr/lib/lib*GL*                         \
-	/usr/lib/dri/*                           \
-	/usr/lib/vdpau/*                         \
-	/usr/lib/libvulkan*                      \
-	/usr/lib/libVkLayer*                     \
-	/usr/lib/libXss.so*                      \
-	/usr/lib/libdecor-0.so*                  \
-	/usr/lib/libgamemode.so*                 \
-	/usr/lib/qt6/plugins/imageformats/*      \
-	/usr/lib/qt6/plugins/iconengines/*       \
-	/usr/lib/qt6/plugins/platform*/*         \
-	/usr/lib/qt6/plugins/styles/*            \
-	/usr/lib/qt6/plugins/xcbglintegrations/* \
-	/usr/lib/qt6/plugins/wayland-*/*         \
-	/usr/lib/pulseaudio/*                    \
-	/usr/lib/pipewire-0.3/*                  \
-	/usr/lib/spa-0.2/*/*                     \
-	/usr/lib/alsa-lib/*
+wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
+chmod +x ./quick-sharun
+DEPLOY_OPENGL=1 DEPLOY_VULKAN=1 DEPLOY_PIPEWIRE=1 \
+	./quick-sharun /usr/bin/citron* /usr/lib/libgamemode.so*
+ln ./AppDir/sharun ./AppDir/AppRun
 
 # Prepare sharun
 if [ "$ARCH" = 'aarch64' ]; then
 	# allow the host vulkan to be used for aarch64 given the sad situation
-	echo 'SHARUN_ALLOW_SYS_VKICD=1' > ./.env
+	echo 'SHARUN_ALLOW_SYS_VKICD=1' > ./AppDir/.env
 fi
-ln ./sharun ./AppRun
-./sharun -g
 
 # turn appdir into appimage
 cd ..
