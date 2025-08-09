@@ -100,7 +100,6 @@ if [ "$ARCH" = 'aarch64' ]; then
 fi
 
 # turn appdir into appimage
-cd ..
 wget --retry-connrefused --tries=30 "$URUNTIME"      -O  ./uruntime
 wget --retry-connrefused --tries=30 "$URUNTIME_LITE" -O  ./uruntime-lite
 chmod +x ./uruntime*
