@@ -84,15 +84,15 @@ export DEPLOY_OPENGL=1
 export DEPLOY_VULKAN=1 
 export DEPLOY_PIPEWIRE=1
 
-if [ "$DEVEL" = 'true' ]; then
-	sed -i 's|Name=citron|Name=citron nightly|' ./AppDir/*.desktop
-	UPINFO="$(echo "$UPINFO" | sed 's|latest|nightly|')"
-fi
-
 # ADD LIBRARIES
 wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
 chmod +x ./quick-sharun
 ./quick-sharun /usr/bin/citron* /usr/lib/libgamemode.so*
+
+if [ "$DEVEL" = 'true' ]; then
+	sed -i 's|Name=citron|Name=citron nightly|' ./AppDir/*.desktop
+	UPINFO="$(echo "$UPINFO" | sed 's|latest|nightly|')"
+fi
 
 # allow the host vulkan to be used for aarch64 given the sad situation
 if [ "$ARCH" = 'aarch64' ]; then
