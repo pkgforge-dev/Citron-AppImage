@@ -3,9 +3,6 @@
 set -ex
 
 ARCH="$(uname -m)"
-SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/quick-sharun.sh"
-URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
-URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-lite-$ARCH"
 
 if [ "$1" = 'v3' ] && [ "$ARCH" = 'x86_64' ]; then
 	echo "Making x86-64-v3 optimized build of citron..."
@@ -18,8 +15,6 @@ else
 	echo "Making aarch64 build of citron..."
 	ARCH_FLAGS="-march=armv8-a -mtune=generic -O3"
 fi
-
-UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARCH.AppImage.zsync"
 
 # BUILD CITRON, fallback to mirror if upstream repo fails to clone
 git clone --recursive "https://git.citron-emu.org/citron/emu.git" ./citron && (
@@ -74,13 +69,21 @@ git clone --recursive "https://git.citron-emu.org/citron/emu.git" ./citron && (
 	echo "$VERSION" >~/version
 )
 rm -rf ./citron
-VERSION="$(cat ~/version)"
 
-# PREPARE APPDIR
-mkdir -p ./AppDir
-cp -v /usr/share/applications/*citron*.desktop             ./AppDir
-cp -v /usr/share/icons/hicolor/scalable/apps/*citron*.svg  ./AppDir
-cp -v /usr/share/icons/hicolor/scalable/apps/*citron*.svg  ./AppDir/.DirIcon
+# Deploy AppImage
+VERSION="$(cat ~/version)"
+URUNTIME="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/uruntime2appimage.sh"
+SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/quick-sharun.sh"
+
+export ADD_HOOKS="self-updater.bg.hook"
+export UPINFO="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|*$ARCH.AppImage.zsync"
+export OUTNAME=Citron-"$VERSION"-anylinux-"$ARCH".AppImage
+export DESKTOP=/usr/share/applications/org.citron_emu.citron.desktop
+export ICON=/usr/share/icons/hicolor/scalable/apps/org.citron_emu.citron.svg
+export DEPLOY_OPENGL=1 
+export DEPLOY_VULKAN=1 
+export DEPLOY_PIPEWIRE=1
+
 if [ "$DEVEL" = 'true' ]; then
 	sed -i 's|Name=citron|Name=citron nightly|' ./AppDir/*.desktop
 	UPINFO="$(echo "$UPINFO" | sed 's|latest|nightly|')"
@@ -89,36 +92,14 @@ fi
 # ADD LIBRARIES
 wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
 chmod +x ./quick-sharun
-DEPLOY_OPENGL=1 DEPLOY_VULKAN=1 DEPLOY_PIPEWIRE=1 \
-	./quick-sharun /usr/bin/citron* /usr/lib/libgamemode.so*
-ln ./AppDir/sharun ./AppDir/AppRun
+./quick-sharun /usr/bin/citron* /usr/lib/libgamemode.so*
 
-# Prepare sharun
+# allow the host vulkan to be used for aarch64 given the sad situation
 if [ "$ARCH" = 'aarch64' ]; then
-	# allow the host vulkan to be used for aarch64 given the sad situation
 	echo 'SHARUN_ALLOW_SYS_VKICD=1' > ./AppDir/.env
 fi
 
-# turn appdir into appimage
-wget --retry-connrefused --tries=30 "$URUNTIME"      -O  ./uruntime
-wget --retry-connrefused --tries=30 "$URUNTIME_LITE" -O  ./uruntime-lite
-chmod +x ./uruntime*
-
-# Add udpate info to runtime
-echo "Adding update information \"$UPINFO\" to runtime..."
-./uruntime-lite --appimage-addupdinfo "$UPINFO"
-
-echo "Generating AppImage..."
-./uruntime \
-	--appimage-mkdwarfs -f               \
-	--set-owner 0 --set-group 0          \
-	--no-history --no-create-timestamp   \
-	--compression zstd:level=22 -S26 -B8 \
-	--header uruntime-lite               \
-	-i ./AppDir                          \
-	-o ./Citron-"$VERSION"-anylinux-"$ARCH".AppImage
-
-echo "Generating zsync file..."
-zsyncmake *.AppImage -u *.AppImage
-
-echo "All Done!"
+# MAKE APPIMAGE WITH URUNTIME
+wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime2appimage
+chmod +x ./uruntime2appimage
+./uruntime2appimage
