@@ -5,7 +5,7 @@ concurrency:
 
 on:
   schedule:
-    - cron: "0 7 1/14 * *"
+    - cron: "0 7 1/21 * *"
   workflow_dispatch: {}
 
 jobs:
