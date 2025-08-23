@@ -28,6 +28,7 @@ pacman -Syu --noconfirm \
 	mesa                \
 	nasm                \
 	ninja               \
+	nlohmann-json       \
 	numactl             \
 	pulseaudio          \
 	pulseaudio-alsa     \
