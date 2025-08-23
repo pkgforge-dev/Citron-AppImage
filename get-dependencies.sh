@@ -6,6 +6,8 @@ EXTRA_PACKAGES="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImage
 
 pacman -Syu --noconfirm \
 	base-devel          \
+	boost               \
+	boost-libs          \
 	catch2              \
 	cmake               \
 	curl                \
