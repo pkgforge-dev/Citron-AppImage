@@ -17,7 +17,7 @@ else
 fi
 
 # BUILD CITRON, fallback to mirror if upstream repo fails to clone
-git clone --recursive "https://git.citron-emu.org/citron/emu.git" ./citron && (
+git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron && (
 	cd ./citron
 	if [ "$DEVEL" = 'true' ]; then
 		CITRON_TAG="$(git rev-parse --short HEAD)"
