@@ -30,6 +30,7 @@ pacman -Syu --noconfirm \
 	ninja               \
 	nlohmann-json       \
 	numactl             \
+	openal              \
 	pulseaudio          \
 	pulseaudio-alsa     \
 	qt6-base            \
