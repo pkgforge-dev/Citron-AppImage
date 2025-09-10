@@ -22,7 +22,7 @@ export DEPLOY_PIPEWIRE=1
 # ADD LIBRARIES
 wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
 chmod +x ./quick-sharun
-./quick-sharun /usr/bin/citron* /usr/lib/libgamemode.so*
+./quick-sharun /usr/bin/citron* /usr/lib/libgamemode.so* /usr/lib/libpulse.so*
 
 if [ "$DEVEL" = 'true' ]; then
 	sed -i 's|Name=citron|Name=citron nightly|' ./AppDir/*.desktop
