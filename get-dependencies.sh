@@ -59,6 +59,10 @@ chmod +x ./get-debloated-pkgs.sh
 
 echo "Building citron..."
 echo "---------------------------------------------------------------"
+sed -i 's|EUID == 0|EUID == 69|g' /usr/bin/makepkg
+sed -i 's|-O2|-O3|; s|MAKEFLAGS=.*|MAKEFLAGS="-j$(nproc)"|; s|#MAKEFLAGS|MAKEFLAGS|' /etc/makepkg.conf
+cat /etc/makepkg.conf
+
 if [ "$1" = 'v3' ] && [ "$ARCH" = 'x86_64' ]; then
 	echo "Making x86-64-v3 optimized build of citron..."
 	ARCH_FLAGS="-march=x86-64-v3 -O3"
