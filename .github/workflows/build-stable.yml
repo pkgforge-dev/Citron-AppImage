@@ -31,19 +31,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Compile Citron (Normal)
         if: ${{ matrix.optimized == false }}
         run: chmod +x ./get-dependencies.sh && ./get-dependencies.sh
 
-      - name: Install dependencies
+      - name: Compile Citron (Optimized)
         if: ${{ matrix.optimized == true }}
         run: chmod +x ./get-dependencies.sh && ./get-dependencies.sh v3
 
-      - name: Compile Citron (Normal)
+      - name: Make AppImage (Normal)
         if: ${{ matrix.optimized == false }}
         run: chmod +x ./citron-appimage.sh && ./citron-appimage.sh
 
-      - name: Compile Citron (Optimized)
+      - name: Make AppImage (Optimized)
         if: ${{ matrix.optimized == true }}
         run: chmod +x ./citron-appimage.sh && ./citron-appimage.sh v3
 
@@ -52,7 +52,6 @@ jobs:
         with:
           name: AppImage-${{ matrix.optimized && 'optimized' || 'normal' }}-${{ matrix.arch }}
           path: "dist"
-
 
   release:
     if: ${{ github.ref_name == 'main' }}
