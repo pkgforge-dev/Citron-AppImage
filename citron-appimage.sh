@@ -38,10 +38,23 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 
 	# nonsense
 	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QNetworkAccessManager>|#include <QtNetwork/QNetworkAccessManager>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QSslConfiguration>|#include <QtNetwork/QSslConfiguration>|g'
 	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QNetworkReply>|#include <QtNetwork/QNetworkReply>|g'
 	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QNetworkRequest>|#include <QtNetwork/QNetworkRequest>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QSslSocket>|#include <QtNetwork/QSslSocket>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QSslCertificate>|#include <QtNetwork/QSslCertificate>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QSslKey>|#include <QtNetwork/QSslKey>|g'
+
 	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QProgressDialog>|#include <QtWidgets/QProgressDialog>|g'
 	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QMessageBox>|#include <QtWidgets/QMessageBox>|g'
+
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QThread>|#include <QtCore/QThread>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QFile>|#include <QtCore/QFile>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QDir>|#include <QtCore/QDir>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QStandardPaths>|#include <QtCore/QStandardPaths>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QCoreApplication>|#include <QtCore/QCoreApplication>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QCoreApplication>|#include <QtCore/QCoreApplication>|g'
+	
 
 	# remove mysterious sse2neon library dependency
 	sed -i '/sse2neon/d' ./src/video_core/CMakeLists.txt
