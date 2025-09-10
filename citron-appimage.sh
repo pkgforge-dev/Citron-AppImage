@@ -45,7 +45,6 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 		-DCITRON_USE_BUNDLED_VCPKG=OFF                \
 		-DCITRON_USE_BUNDLED_QT=OFF                   \
 		-DENABLE_QT6=ON                               \
-		-DUSE_SYSTEM_QT=ON                            \
 		-DCITRON_USE_BUNDLED_FFMPEG=OFF               \
 		-DCITRON_USE_BUNDLED_SDL2=ON                  \
 		-DCITRON_USE_EXTERNAL_SDL2=OFF                \
