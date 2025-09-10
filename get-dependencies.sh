@@ -85,6 +85,11 @@ cd ./citron
 #	-e "s|\$CXXFLAGS|$ARCH_FLAGS|g"                     \
 #	-e "s|\$CFLAGS|$ARCH_FLAGS|g"                       \
 #	./PKGBUILD
+sed -i \
+	-e 's|DISCORD_PRESENCE=ON|DISCORD_PRESENCE=OFF|g'   \
+	-e "s|\$CXXFLAGS|$ARCH_FLAGS|g"                     \
+	-e "s|\$CFLAGS|$ARCH_FLAGS|g"                       \
+	./PKGBUILD
 cat ./PKGBUILD
 
 makepkg -fs --noconfirm --skippgpcheck
