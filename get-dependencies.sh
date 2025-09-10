@@ -42,6 +42,7 @@ pacman -Syu --noconfirm \
 	unzip               \
 	vulkan-headers      \
 	vulkan-mesa-layers  \
+	vulkan-utility-libraries \
 	wget                \
 	xcb-util-cursor     \
 	xcb-util-image      \
