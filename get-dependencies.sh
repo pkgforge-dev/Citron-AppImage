@@ -34,6 +34,7 @@ pacman -Syu --noconfirm \
 	pulseaudio               \
 	pulseaudio-alsa          \
 	qt6-base                 \
+	qt6-declarative          \
 	qt6ct                    \
 	qt6-multimedia           \
 	qt6-tools                \
