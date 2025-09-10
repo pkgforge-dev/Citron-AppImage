@@ -30,8 +30,6 @@ jobs:
     container: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
       - name: Install dependencies
         if: ${{ matrix.optimized == false }}
@@ -43,68 +41,34 @@ jobs:
 
       - name: Compile Citron (Normal)
         if: ${{ matrix.optimized == false }}
-        run: |
-          chmod +x ./citron-appimage.sh && ./citron-appimage.sh
-          mkdir -p dist
-          mv *.AppImage* dist/
+        run: chmod +x ./citron-appimage.sh && ./citron-appimage.sh
 
       - name: Compile Citron (Optimized)
         if: ${{ matrix.optimized == true }}
-        run: |
-          rm -rf ./AppDir || true
-          sudo pacman -R --noconfirm citron || true
-          chmod +x ./citron-appimage.sh && ./citron-appimage.sh v3
-          mkdir -p dist
-          mv *.AppImage* dist/
+        run: chmod +x ./citron-appimage.sh && ./citron-appimage.sh v3
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: citron-${{ matrix.optimized && 'optimized' || 'normal' }}-appimage-${{ matrix.arch }}
+          name: AppImage-${{ matrix.optimized && 'optimized' || 'normal' }}-${{ matrix.arch }}
           path: "dist"
 
-      - name: Check version file
-        if: ${{ matrix.optimized == false }}
-        run: |
-          cat ~/version
-          echo "APP_VERSION=$(cat ~/version)" >> "${GITHUB_ENV}"
-
-      - name: Upload version file
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: version
-          path: ~/version
-          overwrite: true
 
   release:
     if: ${{ github.ref_name == 'main' }}
-    name: "release"
     needs: [build]
-    permissions:
-      actions: read
-      security-events: write
-      contents: write
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4.3.0
         with:
-          name: citron-optimized-appimage-x86_64
-
-      - uses: actions/download-artifact@v4.3.0
-        with:
-          name: citron-normal-appimage-x86_64
-
-      - uses: actions/download-artifact@v4.3.0
-        with:
-          name: citron-normal-appimage-aarch64
-
-      - uses: actions/download-artifact@v4.3.0
-        with:
-          name: version
+          pattern: AppImage-*
+          merge-multiple: true
 
       - name: Read version and Get date
         run: |
-          echo "VERSION=$(cat version)" >> "${GITHUB_ENV}"
+          cat ./version
+          echo "VERSION=$(cat ./version)" >> "${GITHUB_ENV}"
           echo "DATE=$(date +'%Y-%m-%d_%s')" >> "${GITHUB_ENV}"
 
       - name: Release Artifacts
