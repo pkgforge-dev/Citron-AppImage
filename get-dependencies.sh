@@ -78,6 +78,7 @@ git clone https://aur.archlinux.org/"$citronpkg".git ./citron
 cd ./citron
 
 sed -i \
+	-e "s|x86_64|$ARCH|g"                              \
 	-e 's|DISCORD_PRESENCE=ON|DISCORD_PRESENCE=OFF|'   \
 	-e 's|USE_QT_MULTIMEDIA=ON|USE_QT_MULTIMEDIA=OFF|' \
 	-e 's|BUILD_TYPE=None|BUILD_TYPE=Release|'         \
