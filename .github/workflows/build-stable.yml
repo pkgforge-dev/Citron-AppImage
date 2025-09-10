@@ -34,8 +34,11 @@ jobs:
           persist-credentials: false
 
       - name: Install dependencies
-        if: always()
         run: chmod +x ./get-dependencies.sh && ./get-dependencies.sh
+
+      - name: Install dependencies
+        if: ${{ matrix.optimized == true }}
+        run: chmod +x ./get-dependencies.sh && ./get-dependencies.sh v3
 
       - name: Compile Citron (Normal)
         if: ${{ matrix.optimized == false }}
