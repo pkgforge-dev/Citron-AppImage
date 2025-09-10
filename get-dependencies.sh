@@ -11,26 +11,18 @@ pacman -Syu --noconfirm \
 	catch2              \
 	cmake               \
 	curl                \
-	enet                \
 	fmt                 \
 	gamemode            \
 	gcc                 \
 	git                 \
-	glslang             \
-	glu                 \
-	hidapi              \
-	libdecor            \
-	libvpx              \
 	libxi               \
 	libxkbcommon-x11    \
 	libxss              \
 	mbedtls2            \
 	mesa                \
-	nasm                \
 	ninja               \
-	nlohmann-json       \
-	numactl             \
 	openal              \
+	pipewire-audio      \
 	pulseaudio          \
 	pulseaudio-alsa     \
 	qt6-base            \
