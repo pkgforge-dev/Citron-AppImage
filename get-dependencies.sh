@@ -92,6 +92,7 @@ sed -i \
 	-e "s|\$CXXFLAGS|$ARCH_FLAGS|g"                     \
 	-e "s|\$CFLAGS|$ARCH_FLAGS|g"                       \
 	./PKGBUILD
+cat ./PKGBUILD
 
 makepkg -fs --noconfirm --skippgpcheck
 ls -la .
