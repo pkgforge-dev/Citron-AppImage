@@ -43,12 +43,11 @@ pacman -Syu --noconfirm \
 	zip                 \
 	zsync
 
-#echo "Installing debloated packages..."
-#echo "---------------------------------------------------------------"
-#wget --retry-connrefused --tries=30 "$EXTRA_PACKAGES" -O ./get-debloated-pkgs.sh
-#chmod +x ./get-debloated-pkgs.sh
-#./get-debloated-pkgs.sh --add-mesa
-pacman -Syu --noconfirm vulkan-radeon vulkan-intel vulkan-nouveau
+echo "Installing debloated packages..."
+echo "---------------------------------------------------------------"
+wget --retry-connrefused --tries=30 "$EXTRA_PACKAGES" -O ./get-debloated-pkgs.sh
+chmod +x ./get-debloated-pkgs.sh
+./get-debloated-pkgs.sh --add-mesa qt6-base-mini llvm-libs-nano
 
 echo "Building citron..."
 echo "---------------------------------------------------------------"
@@ -78,17 +77,12 @@ fi
 git clone https://aur.archlinux.org/"$citronpkg".git ./citron
 cd ./citron
 
-#sed -i \
-#	-e 's|USE_QT_MULTIMEDIA=ON|USE_QT_MULTIMEDIA=OFF|g' \
-#	-e 's|USE_QT_WEB_ENGINE=ON|USE_QT_WEB_ENGINE=OFF|g' \
-#	-e 's|DISCORD_PRESENCE=ON|DISCORD_PRESENCE=OFF|g'   \
-#	-e "s|\$CXXFLAGS|$ARCH_FLAGS|g"                     \
-#	-e "s|\$CFLAGS|$ARCH_FLAGS|g"                       \
-#	./PKGBUILD
 sed -i \
-	-e 's|DISCORD_PRESENCE=ON|DISCORD_PRESENCE=OFF|g'   \
-	-e "s|\$CXXFLAGS|$ARCH_FLAGS|g"                     \
-	-e "s|\$CFLAGS|$ARCH_FLAGS|g"                       \
+	-e 's|DISCORD_PRESENCE=ON|DISCORD_PRESENCE=OFF|'   \
+	-e 's|USE_QT_MULTIMEDIA=ON|USE_QT_MULTIMEDIA=OFF|' \
+	-e 's|BUILD_TYPE=None|BUILD_TYPE=Release|'         \
+	-e "s|\$CXXFLAGS|$ARCH_FLAGS|g"                    \
+	-e "s|\$CFLAGS|$ARCH_FLAGS|g"                      \
 	./PKGBUILD
 cat ./PKGBUILD
 
