@@ -24,6 +24,10 @@ wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
 chmod +x ./quick-sharun
 ./quick-sharun /usr/bin/citron* /usr/lib/libgamemode.so* /usr/lib/libpulse.so*
 
+# TODO: remove me once we can build citron again without qt6-webengine nonsense
+cp -rv /usr/share/qt6/resources    ./AppDir/shared/lib/qt6
+cp -rv /usr/share/qt6/translations ./AppDir/shared/lib/qt6
+
 if [ "$DEVEL" = 'true' ]; then
 	sed -i 's|Name=citron|Name=citron nightly|' ./AppDir/*.desktop
 	UPINFO="$(echo "$UPINFO" | sed 's|latest|nightly|')"
