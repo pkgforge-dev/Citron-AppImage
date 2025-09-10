@@ -64,7 +64,9 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 		-DCMAKE_C_FLAGS="$ARCH_FLAGS"                 \
 		-DCMAKE_SYSTEM_PROCESSOR="$(uname -m)"        \
 		-DCMAKE_BUILD_TYPE=Release                    \
-		-DCMAKE_POLICY_VERSION_MINIMUM=3.5
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5            \
+		-DCITRON_USE_EXTERNAL_VULKAN_HEADERS=OFF      \
+		-DCITRON_USE_EXTERNAL_VULKAN_UTILITY_LIBRARIES=OFF
 	ninja
 	sudo ninja install
 	echo "$VERSION" >~/version
