@@ -71,13 +71,14 @@ else
 fi
 
 if [ "$DEVEL" = 'true' ]; then
+	citronpkg=citron-git
 	echo "Making nightly build..."
-	git clone https://aur.archlinux.org/citron-git.git ./citron
 else
+	citronpkg=citron
 	echo "Making stable build..."
-	git clone https://aur.archlinux.org/citron.git ./citron
 fi
 
+git clone https://aur.archlinux.org/"$citronpkg".git ./citron
 cd ./citron
 
 sed -i \
@@ -91,3 +92,4 @@ sed -i \
 makepkg -fs --noconfirm --skippgpcheck
 ls -la .
 pacman --noconfirm -U ./*.pkg.tar.*
+pacman -Q "$citronpkg" | awk '{print $2; exit}' > ~/version
