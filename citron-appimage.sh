@@ -53,7 +53,7 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 		-DCITRON_USE_LLVM_DEMANGLE=OFF                \
 		-DCITRON_ENABLE_LTO=ON                        \
 		-DCITRON_USE_QT_MULTIMEDIA=OFF                \
-		-DCITRON_USE_QT_WEB_ENGINE=OFF                \
+		-DCITRON_USE_QT_WEB_ENGINE=ON                 \
 		-DENABLE_QT_TRANSLATION=ON                    \
 		-DUSE_DISCORD_PRESENCE=OFF                    \
 		-DBUNDLE_SPEEX=ON                             \
