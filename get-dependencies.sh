@@ -55,4 +55,39 @@ echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
 wget --retry-connrefused --tries=30 "$EXTRA_PACKAGES" -O ./get-debloated-pkgs.sh
 chmod +x ./get-debloated-pkgs.sh
-./get-debloated-pkgs.sh --add-common intel-media-driver
+./get-debloated-pkgs.sh --add-mesa
+
+echo "Building citron..."
+echo "---------------------------------------------------------------"
+if [ "$1" = 'v3' ] && [ "$ARCH" = 'x86_64' ]; then
+	echo "Making x86-64-v3 optimized build of citron..."
+	ARCH_FLAGS="-march=x86-64-v3 -O3"
+elif [ "$ARCH" = 'x86_64' ]; then
+	echo "Making x86-64 generic build of citron..."
+	ARCH_FLAGS="-march=x86-64 -mtune=generic -O3"
+else
+	echo "Making aarch64 build of citron..."
+	ARCH_FLAGS="-march=armv8-a -mtune=generic -O3"
+fi
+
+if [ "$DEVEL" = 'true' ]; then
+	echo "Making nightly build..."
+	git clone https://aur.archlinux.org/citron-git.git ./citron
+else
+	echo "Making stable build..."
+	git clone https://aur.archlinux.org/citron.git ./citron
+fi
+
+cd ./citron
+
+sed -i \
+	-e 's|USE_QT_MULTIMEDIA=ON|USE_QT_MULTIMEDIA=OFF|g' \
+	-e 's|USE_QT_WEB_ENGINE=ON|USE_QT_WEB_ENGINE=OFF|g' \
+	-e 's|DISCORD_PRESENCE=ON|DISCORD_PRESENCE=OFF|g'   \
+	-e "s|\$CXXFLAGS|$ARCH_FLAGS|g"                     \
+	-e "s|\$CFLAGS|$ARCH_FLAGS|g"                       \
+	./PKGBUILD
+
+makepkg -fs --noconfirm --skippgpcheck
+ls -la .
+pacman --noconfirm -U ./*.pkg.tar.*
