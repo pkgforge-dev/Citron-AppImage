@@ -36,6 +36,13 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include *<boost/process/async_pipe.hpp>|#include <boost/process/v1/async_pipe.hpp>|g'
 	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::process::async_pipe\b/boost::process::v1::async_pipe/g'
 
+	# nonsense
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QNetworkAccessManager>|#include <QtNetwork/QNetworkAccessManager>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QNetworkReply>|#include <QtNetwork/QNetworkReply>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QNetworkRequest>|#include <QtNetwork/QNetworkRequest>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QProgressDialog>|#include <QtWidgets/QProgressDialog>|g'
+	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QMessageBox>|#include <QtWidgets/QMessageBox>|g'
+
 	# remove mysterious sse2neon library dependency
 	sed -i '/sse2neon/d' ./src/video_core/CMakeLists.txt
 
