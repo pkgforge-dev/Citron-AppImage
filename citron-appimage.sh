@@ -42,6 +42,7 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 	mkdir build
 	cd build
 	cmake .. -GNinja \
+		-DYUZU_CMD=OFF                                \
 		-DCITRON_USE_BUNDLED_VCPKG=OFF                \
 		-DCITRON_USE_BUNDLED_QT=OFF                   \
 		-DENABLE_QT6=ON                               \
@@ -53,7 +54,7 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 		-DCITRON_USE_LLVM_DEMANGLE=OFF                \
 		-DCITRON_ENABLE_LTO=ON                        \
 		-DCITRON_USE_QT_MULTIMEDIA=OFF                \
-		-DCITRON_USE_QT_WEB_ENGINE=ON                 \
+		-DCITRON_USE_QT_WEB_ENGINE=OFF                \
 		-DENABLE_QT_TRANSLATION=ON                    \
 		-DUSE_DISCORD_PRESENCE=OFF                    \
 		-DBUNDLE_SPEEX=ON                             \
