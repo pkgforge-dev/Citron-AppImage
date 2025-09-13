@@ -23,10 +23,10 @@ jobs:
             optimized: true
             name: "Citron Build (Optimized)"
             arch: x86_64
-#          - runs-on: ubuntu-24.04-arm
-#            name: "Citron build (Normal)"
-#            optimized: false
-#            arch: aarch64
+          - runs-on: ubuntu-24.04-arm
+            name: "Citron build (Normal)"
+            optimized: false
+            arch: aarch64
     container: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
       - uses: actions/checkout@v4
