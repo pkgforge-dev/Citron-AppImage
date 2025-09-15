@@ -31,30 +31,10 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 	fi
 
 	# Upstream fixed this issue, but a newer version of boost came out and broke it again 🤣
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::asio::io_service\b/boost::asio::io_context/g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::asio::io_service::strand\b/boost::asio::strand<boost::asio::io_context::executor_type>/g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include *<boost/process/async_pipe.hpp>|#include <boost/process/v1/async_pipe.hpp>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::process::async_pipe\b/boost::process::v1::async_pipe/g'
-
-	# nonsense
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QNetworkAccessManager>|#include <QtNetwork/QNetworkAccessManager>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QSslConfiguration>|#include <QtNetwork/QSslConfiguration>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QNetworkReply>|#include <QtNetwork/QNetworkReply>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QNetworkRequest>|#include <QtNetwork/QNetworkRequest>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QSslSocket>|#include <QtNetwork/QSslSocket>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QSslCertificate>|#include <QtNetwork/QSslCertificate>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QSslKey>|#include <QtNetwork/QSslKey>|g'
-
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QProgressDialog>|#include <QtWidgets/QProgressDialog>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QMessageBox>|#include <QtWidgets/QMessageBox>|g'
-
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QThread>|#include <QtCore/QThread>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QFile>|#include <QtCore/QFile>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QDir>|#include <QtCore/QDir>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QStandardPaths>|#include <QtCore/QStandardPaths>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QCoreApplication>|#include <QtCore/QCoreApplication>|g'
-	find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include <QCoreApplication>|#include <QtCore/QCoreApplication>|g'
-	
+	#find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::asio::io_service\b/boost::asio::io_context/g'
+	#find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::asio::io_service::strand\b/boost::asio::strand<boost::asio::io_context::executor_type>/g'
+	#find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include *<boost/process/async_pipe.hpp>|#include <boost/process/v1/async_pipe.hpp>|g'
+	#find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::process::async_pipe\b/boost::process::v1::async_pipe/g'
 
 	# remove mysterious sse2neon library dependency
 	sed -i '/sse2neon/d' ./src/video_core/CMakeLists.txt
@@ -62,31 +42,24 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 	mkdir build
 	cd build
 	cmake .. -GNinja \
-		-DYUZU_CMD=OFF                                \
-		-DCITRON_USE_BUNDLED_VCPKG=OFF                \
-		-DCITRON_USE_BUNDLED_QT=OFF                   \
-		-DENABLE_QT6=ON                               \
-		-DCITRON_USE_BUNDLED_FFMPEG=OFF               \
-		-DCITRON_USE_BUNDLED_SDL2=ON                  \
-		-DCITRON_USE_EXTERNAL_SDL2=OFF                \
-		-DCITRON_TESTS=OFF                            \
-		-DCITRON_CHECK_SUBMODULES=OFF                 \
-		-DCITRON_USE_LLVM_DEMANGLE=OFF                \
-		-DCITRON_ENABLE_LTO=ON                        \
-		-DCITRON_USE_QT_MULTIMEDIA=OFF                \
-		-DCITRON_USE_QT_WEB_ENGINE=OFF                \
-		-DENABLE_QT_TRANSLATION=ON                    \
-		-DUSE_DISCORD_PRESENCE=OFF                    \
-		-DBUNDLE_SPEEX=ON                             \
-		-DCITRON_USE_FASTER_LD=OFF                    \
-		-DCMAKE_INSTALL_PREFIX=/usr                   \
-		-DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error -w" \
-		-DCMAKE_C_FLAGS="$ARCH_FLAGS"                 \
-		-DCMAKE_SYSTEM_PROCESSOR="$(uname -m)"        \
-		-DCMAKE_BUILD_TYPE=Release                    \
-		-DCMAKE_POLICY_VERSION_MINIMUM=3.5            \
-		-DCITRON_USE_EXTERNAL_VULKAN_HEADERS=OFF      \
-		-DCITRON_USE_EXTERNAL_VULKAN_UTILITY_LIBRARIES=OFF
+		-DCITRON_ENABLE_LTO=ON                  \
+		-DSDL_PIPEWIRE=OFF                      \
+		-DCITRON_USE_BUNDLED_VCPKG=ON           \
+		-DCITRON_TESTS=OFF                      \
+		-DENABLE_QT6=ON                         \
+		-DCITRON_USE_LLVM_DEMANGLE=OFF          \
+		-DCITRON_USE_PRECOMPILED_HEADERS=ON     \
+		-DCMAKE_INSTALL_PREFIX=/usr             \
+		-DUSE_DISCORD_PRESENCE=OFF              \
+		-DBUNDLE_SPEEX=ON                       \
+		-DCITRON_USE_BUNDLED_FFMPEG=OFF         \
+		-DCITRON_USE_QT_MULTIMEDIA=OFF          \
+		-DCITRON_USE_QT_WEB_ENGINE=OFF          \
+		-DCMAKE_SYSTEM_PROCESSOR="$(uname -m)"  \
+		-DCMAKE_BUILD_TYPE=Release              \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5      \
+		-DCMAKE_C_FLAGS="$ARCH_FLAGS"           \
+		-DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error -Wno-template-body -w"
 	ninja
 	sudo ninja install
 	echo "$VERSION" >~/version
