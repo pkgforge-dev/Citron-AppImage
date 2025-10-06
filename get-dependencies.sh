@@ -21,6 +21,7 @@ pacman -Syu --noconfirm \
 	mbedtls2            \
 	mesa                \
 	ninja               \
+	nlohmann-json       \
 	openal              \
 	pipewire-audio      \
 	pulseaudio          \
@@ -47,13 +48,10 @@ echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
 wget --retry-connrefused --tries=30 "$EXTRA_PACKAGES" -O ./get-debloated-pkgs.sh
 chmod +x ./get-debloated-pkgs.sh
-./get-debloated-pkgs.sh --add-mesa qt6-base-mini llvm-libs-nano opus-nano
+./get-debloated-pkgs.sh --add-mesa qt6-base-mini llvm-libs-nano opus-nano gdk-pixbuf2-mini
 
 echo "Building citron..."
 echo "---------------------------------------------------------------"
-sed -i 's|EUID == 0|EUID == 69|g' /usr/bin/makepkg
-sed -i 's|-O2|-O3|; s|MAKEFLAGS=.*|MAKEFLAGS="-j$(nproc)"|; s|#MAKEFLAGS|MAKEFLAGS|' /etc/makepkg.conf
-cat /etc/makepkg.conf
 
 if [ "$1" = 'v3' ] && [ "$ARCH" = 'x86_64' ]; then
 	echo "Making x86-64-v3 optimized build of citron..."
@@ -66,28 +64,42 @@ else
 	ARCH_FLAGS="-march=armv8-a -mtune=generic -O3"
 fi
 
-if [ "$DEVEL" = 'true' ]; then
-	citronpkg=citron-git
-	echo "Making nightly build..."
-else
-	citronpkg=citron
-	echo "Making stable build..."
-fi
+git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron && (
+	cd ./citron
 
-git clone https://aur.archlinux.org/"$citronpkg".git ./citron
-cd ./citron
+	if [ "$DEVEL" = 'true' ]; then
+		CITRON_TAG="$(git rev-parse --short HEAD)"
+		echo "Making nightly \"$CITRON_TAG\" build"
+		VERSION="$CITRON_TAG"
+	else
+		CITRON_TAG=$(git describe --tags)
+		echo "Making stable \"$CITRON_TAG\" build"
+		git checkout "$CITRON_TAG"
+		VERSION="$(echo "$CITRON_TAG" | awk -F'-' '{print $1}')"
+	fi
 
-sed -i \
-	-e "s|x86_64|$ARCH|g"                              \
-	-e 's|DISCORD_PRESENCE=ON|DISCORD_PRESENCE=OFF|'   \
-	-e 's|USE_QT_MULTIMEDIA=ON|USE_QT_MULTIMEDIA=OFF|' \
-	-e 's|BUILD_TYPE=None|BUILD_TYPE=Release|'         \
-	-e "s|\$CXXFLAGS|$ARCH_FLAGS|g"                    \
-	-e "s|\$CFLAGS|$ARCH_FLAGS|g"                      \
-	./PKGBUILD
-cat ./PKGBUILD
+	# remove mysterious sse2neon library dependency
+	sed -i '/sse2neon/d' ./src/video_core/CMakeLists.txt
 
-makepkg -fs --noconfirm --skippgpcheck
-ls -la .
-pacman --noconfirm -U ./*.pkg.tar.*
-pacman -Q "$citronpkg" | awk '{print $2; exit}' > ~/version
+	mkdir ./build
+	cd ./build
+	cmake .. -GNinja \
+		-DCMAKE_BUILD_TYPE=Release             \
+		-DCMAKE_INSTALL_PREFIX=/usr            \
+		-DUSE_SYSTEM_QT=ON                     \
+		-DCITRON_USE_BUNDLED_VCPKG=OFF         \
+		-DCITRON_USE_BUNDLED_FFMPEG=OFF        \
+		-DCITRON_USE_BUNDLED_SDL2=OFF          \
+		-DCITRON_USE_EXTERNAL_SDL2=OFF         \
+		-DCITRON_CHECK_SUBMODULES=OFF          \
+		-DCITRON_ENABLE_LTO=ON                 \
+		-DCITRON_TESTS=OFF                     \
+		-DENABLE_QT_TRANSLATION=ON             \
+		-DCMAKE_SYSTEM_PROCESSOR="$(uname -m)" \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5     \
+		-DCMAKE_C_FLAGS="$ARCH_FLAGS"          \
+		-DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error -Wno-template-body -w"
+	ninja
+	sudo ninja install
+	echo "$VERSION" >~/version
+)
