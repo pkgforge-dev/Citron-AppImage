@@ -48,7 +48,7 @@ echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
 wget --retry-connrefused --tries=30 "$EXTRA_PACKAGES" -O ./get-debloated-pkgs.sh
 chmod +x ./get-debloated-pkgs.sh
-./get-debloated-pkgs.sh --add-mesa qt6-base-mini llvm-libs-nano opus-nano
+./get-debloated-pkgs.sh --add-mesa qt6-base-mini llvm-libs-nano opus-nano gdk-pixbuf2-mini
 
 echo "Building citron..."
 echo "---------------------------------------------------------------"
