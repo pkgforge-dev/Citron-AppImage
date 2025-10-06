@@ -21,6 +21,7 @@ pacman -Syu --noconfirm \
 	mbedtls2            \
 	mesa                \
 	ninja               \
+	nlohmann-json       \
 	openal              \
 	pipewire-audio      \
 	pulseaudio          \
