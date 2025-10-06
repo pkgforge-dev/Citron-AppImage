@@ -85,6 +85,7 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 	cd ./build
 	cmake .. -GNinja \
 		-DCMAKE_BUILD_TYPE=Release             \
+		-DCMAKE_INSTALL_PREFIX=/usr            \
 		-DUSE_SYSTEM_QT=ON                     \
 		-DCITRON_USE_BUNDLED_VCPKG=OFF         \
 		-DCITRON_USE_BUNDLED_FFMPEG=OFF        \
