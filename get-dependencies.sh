@@ -81,6 +81,10 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 	# remove mysterious sse2neon library dependency
 	sed -i '/sse2neon/d' ./src/video_core/CMakeLists.txt
 
+	# fix path to header
+	qpaheader=$(find /usr/include -type f -name 'qplatformnativeinterface.h' -print -quit)
+	sed -i "s|#include <qpa/qplatformnativeinterface.h>|#include <$qpaheader>|" ./src/citron/qt_common.cpp
+
 	mkdir ./build
 	cd ./build
 	cmake .. -GNinja \
