@@ -71,7 +71,7 @@ jobs:
           echo "DATE=$(date +'%Y-%m-%d_%s')" >> "${GITHUB_ENV}"
 
       - name: Release Artifacts
-        uses: softprops/action-gh-release@v2.2.2
+        uses: softprops/action-gh-release@v2.5.0
         with:
           name: "Citron: ${{ env.VERSION }}"
           tag_name: "${{ env.VERSION }}@${{ env.DATE }}"
