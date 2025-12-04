@@ -87,7 +87,8 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 
 	mkdir ./build
 	cd ./build
-	cmake .. -GNinja \
+	set -- \
+		-GNinja                                \
 		-DCMAKE_BUILD_TYPE=Release             \
 		-DCMAKE_INSTALL_PREFIX=/usr            \
 		-DUSE_SYSTEM_QT=ON                     \
@@ -103,6 +104,14 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 		-DCMAKE_POLICY_VERSION_MINIMUM=3.5     \
 		-DCMAKE_C_FLAGS="$ARCH_FLAGS"          \
 		-DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error -Wno-template-body -w"
+
+	if [ "$DEVEL" = 'true']; then
+		set -- "$@" -DCITRON_BUILD_TYPE=Nightly
+	else
+		set -- "$@" -DCITRON_BUILD_TYPE=Stable
+	fi
+
+	cmake ../ "$@" 
 	ninja
 	sudo ninja install
 	echo "$VERSION" >~/version
