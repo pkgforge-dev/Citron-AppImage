@@ -106,9 +106,9 @@ git clone --recursive "https://git.citron-emu.org/citron/emulator.git" ./citron 
 		-DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error -Wno-template-body -w"
 
 	if [ "$DEVEL" = 'true']; then
-		set -- -DCITRON_BUILD_TYPE=Nightly
+		set -- "$@" -DCITRON_BUILD_TYPE=Nightly
 	else
-		set -- -DCITRON_BUILD_TYPE=Stable
+		set -- "$@" -DCITRON_BUILD_TYPE=Stable
 	fi
 
 	cmake ../ "$@" 
