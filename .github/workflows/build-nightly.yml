@@ -80,7 +80,7 @@ jobs:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         continue-on-error: true
 
-      - uses: softprops/action-gh-release@v2.2.2
+      - uses: softprops/action-gh-release@v2.5.0
         with:
           name: "Continuous Build (Nightly Version: ${{ env.VERSION }})"
           tag_name: "nightly"
