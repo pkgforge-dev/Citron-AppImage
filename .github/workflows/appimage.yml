@@ -1,0 +1,50 @@
+name: Anylinux-AppImage
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+on:
+  schedule:
+    - cron: "0 7 1/21 * *" # We default to rebuilding every 21 days, change this to your liking
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    name: "${{ matrix.name }} (${{ matrix.arch }})"
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      matrix:
+        include:
+          - runs-on: ubuntu-latest
+            name: Build AppImage
+            arch: x86_64
+          # comment out these 3 lines if aarch64 is not wanted
+          - runs-on: ubuntu-24.04-arm
+            name: Build AppImage
+            arch: aarch64
+    container: ghcr.io/pkgforge-dev/archlinux:latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Preparing Container
+        uses: pkgforge-dev/anylinux-setup-action@8872fabe63f9a00b35e25b2f46da62a05afc9a7d # v1
+      - name: Install Dependencies
+        run: /bin/sh ./get-dependencies.sh
+      - name: Make AppImage
+        run: /bin/sh ./make-appimage.sh
+      - name: Upload artifact
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: AppImage-${{ matrix.arch }}
+          path: dist
+
+  release:
+    if: ${{ github.ref_name == 'main' }}
+    needs: [build]
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          pattern: AppImage-*
+          merge-multiple: true
+      - name: Release AppImage
+        uses: pkgforge-dev/make-stable-appimage-release@4ed3d48ccb065352b6e6c0db6d39885b201c54a0 #v1.1
