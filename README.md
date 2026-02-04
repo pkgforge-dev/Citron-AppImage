@@ -15,7 +15,7 @@
 | :---: | :---: | :---: |
 | [Click here](https://github.com/pkgforge-dev/Citron-AppImage/releases/latest) | [Click here](https://github.com/pkgforge-dev/Citron-AppImage/releases/tag/nightly) | [Click here](https://git.citron-emu.org/Citron/Emulator) |
 
-AppImage builds of citron, for `aarch64` and `x86_64`, The `x86_64` builds are optimized for modern x86-64-v3 cpus. 
+AppImage builds of citron, for `aarch64` and `x86_64`, The `x86_64` builds are optimized for x86-64-v3 cpus. 
 </div>
 
 ---
@@ -47,3 +47,11 @@ Self-updater is disabled by default if AppImage managers like [am](https://githu
 ---
 
 More at: [AnyLinux-AppImages](https://pkgforge-dev.github.io/Anylinux-AppImages/)
+
+---
+
+# READ THIS IF YOU HAVE ISSUES
+
+If you are on wayland (specially GNOME wayland) and get freezes or crahes you are likely affected by this issue that affects all Qt6 apps: https://github.com/pkgforge-dev/Citron-AppImage/issues/50
+
+To fix it simply set the env variable `QT_QPA_PLATFORM=xcb`
