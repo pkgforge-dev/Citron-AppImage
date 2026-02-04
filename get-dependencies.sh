@@ -40,7 +40,7 @@ pacman -Syu --noconfirm \
 
 echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
-get-debloated-pkgs.sh --add-common ffmpeg-mini intel-media-driver-mini
+get-debloated-pkgs --add-common ffmpeg-mini intel-media-driver-mini
 
 echo "Building citron..."
 echo "---------------------------------------------------------------"
